@@ -1,18 +1,13 @@
 'use strict'
 import { createClient } from '@/utils/supabase/server'
+import { SupabaseClient } from '@supabase/supabase-js';
+import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
 import { cookies } from 'next/headers'
 
 export default async function Page() {
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+  const cookieStore : ReadonlyRequestCookies = await cookies();
+  const supabase : SupabaseClient = createClient(cookieStore);
 
-  const { data: todos } = await supabase.from('todos').select();
-
-  return (
-    <ul>
-      {todos?.map((todo) => (
-        <li>{todo}</li>
-      ))}
-    </ul>
+  return (<></>
   );
 }
