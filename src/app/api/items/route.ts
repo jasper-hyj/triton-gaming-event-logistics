@@ -28,8 +28,7 @@ export async function GET() {
 
     const { data: items, error }: { data: Item[] | null, error: Error | null } = await supabase
         .from('items')
-        .select('*')
-        .where;
+        .select('*');
 
 
     if (error) {
