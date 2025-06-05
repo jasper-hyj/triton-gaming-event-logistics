@@ -6,7 +6,7 @@ import { cookies } from 'next/headers'
 
 export default async function Page() {
   const cookieStore : ReadonlyRequestCookies = await cookies();
-  const supabase : SupabaseClient = createClient(cookieStore);
+  // const supabase : SupabaseClient = createClient(cookieStore);
 
   return (<></>
   );

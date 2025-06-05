@@ -28,7 +28,7 @@ export async function GET(
     const cookieStore: ReadonlyRequestCookies = await cookies();
     const supabase: SupabaseClient = createClient(cookieStore);
 
-    const { data: item, error } = await supabase
+    const { data: item, error }: { data: Item | null, error: Error | null } = await supabase
         .from('items')
         .select('*')
         .eq('id', itemId)
