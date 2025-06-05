@@ -1,39 +1,17 @@
 // src/app/api/todos/route.ts
-import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
-import { ReadonlyRequestCookies } from 'next/dist/server/web/spec-extension/adapters/request-cookies';
-import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
-
-type Item = {
-    id: string,
-    name: string,
-    type: string,
-    description: string,
-    ports: string[],
-    password: string,
-    parts: string[],
-    missings: string[],
-    condition: string,
-    source: string,
-    provider: string,
-    installations: string[],
-    note: string,
-};
+import ItemsRepository from '@/utils/supabase/repositories/ItemsRepository';
 
 
-export async function GET() {
-    const cookieStore: ReadonlyRequestCookies = await cookies();
-    const supabase: SupabaseClient = createClient(cookieStore);
 
-    const { data: items, error }: { data: Item[] | null, error: Error | null } = await supabase
-        .from('items')
-        .select('*');
+export async function GETItems() {
+    const cookieStore = await cookies();
+    const supabase = createClient(cookieStore);
 
+    const itemsRepo = new ItemsRepository(supabase);
+    const { data, error } = await itemsRepo.getAll();
 
-    if (error) {
-        return NextResponse.json({ error: error.message }, { status: 500 });
-    }
-
-    return NextResponse.json({ items });
+    if (error) return Response.json({ error: error.message }, { status: 500 });
+    return Response.json({ items: data });
 }
