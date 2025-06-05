@@ -5,13 +5,13 @@ import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 import ItemsRepository from '@/utils/supabase/repositories/ItemsRepository';
 
 type Context = {
-    params: {
+    params: Promise<{
         itemId: string;
-    };
+    }>;
 };
 
 export async function GET(_req: NextRequest, { params }: Context) {
-    const { itemId } = params;
+    const { itemId } = await params;
 
     const cookieStore = await cookies();
     const supabase: SupabaseClient = createClient(cookieStore);
