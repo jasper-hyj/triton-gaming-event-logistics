@@ -10,7 +10,7 @@ type Context = {
     };
 };
 
-export async function GETItem(_req: NextRequest, { params }: Context) {
+export async function GET(_req: NextRequest, { params }: Context) {
     const { itemId } = params;
 
     const cookieStore = await cookies();

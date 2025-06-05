@@ -5,7 +5,7 @@ import ItemsRepository from '@/utils/supabase/repositories/ItemsRepository';
 
 
 
-export async function GETItems() {
+export async function GET() {
     const cookieStore = await cookies();
     const supabase = createClient(cookieStore);
 
