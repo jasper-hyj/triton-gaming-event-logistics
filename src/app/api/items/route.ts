@@ -2,6 +2,7 @@
 import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 import ItemsRepository from '@/utils/supabase/repositories/ItemsRepository';
+import { NextRequest } from 'next/server';
 
 
 
