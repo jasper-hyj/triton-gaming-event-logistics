@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import { createClient } from '@/utils/supabase/server';
 import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
@@ -21,10 +21,10 @@ type Item = {
 };
 
 export async function GET(
-    req: Request,
-    context: { params: { itemId: string } }
+    req: NextRequest,
+  { params }: { params: { itemId: string } }
 ) {
-    const { itemId } = context.params;
+    const { itemId } = params;
     const cookieStore: ReadonlyRequestCookies = await cookies();
     const supabase: SupabaseClient = createClient(cookieStore);
 
