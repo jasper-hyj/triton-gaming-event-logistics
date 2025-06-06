@@ -19,7 +19,7 @@ export default function FieldDropdown({
         <div className="flex flex-col">
             <label className="font-medium text-gray-700 mb-2">{label}</label>
             {readOnly ? (
-                <p className="min-h-[36px] text-gray-900 whitespace-pre-wrap">{value || '—'}</p>
+                <p className="text-2xl min-h-[36px] text-gray-900 whitespace-pre-wrap">{value || '—'}</p>
             ) : (
                 <select
                     value={value}
