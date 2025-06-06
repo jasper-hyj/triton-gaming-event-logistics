@@ -8,7 +8,7 @@ export default function HomePage() {
   return (
     <main className="flex flex-col items-center justify-center text-center gap-8 mt-10 px-4">
       <h2 className="text-2xl sm:text-3xl font-medium text-gray-700">
-        Welcome to the Inventory System
+        Welcome to the ELO System
       </h2>
 
       <Link

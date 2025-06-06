@@ -1,12 +1,7 @@
 import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { Part } from './PartsRepository';
+import { Port } from './PortsRepository';
 
-export type Port = {
-    id: string;
-};
-
-export type Part = {
-    id: string;
-};
 
 export type Item = {
     id: string;
@@ -34,56 +29,28 @@ export default class ItemsRepository {
 
     // ----- View-based reads -----
 
-    async getAllItems(): Promise<{ data: Item[] | null; error: Error | null }> {
+    async getAll(): Promise<{ data: Item[] | null; error: Error | null }> {
         const { data, error } = await this.supabase.from('view_items').select('*');
         return { data, error };
     }
 
-    async getItemById(id: string): Promise<{ data: Item | null; error: Error | null }> {
+    async getById(id: string): Promise<{ data: Item | null; error: Error | null }> {
         const { data, error } = await this.supabase.from('view_items').select('*').eq('id', id).single();
         return { data, error };
     }
 
     // ----- Items -----
 
-    async insertItem(item: Omit<Item, 'id' | 'created_at' | 'ports' | 'parts' | 'missings'>) {
+    async insert(item: Omit<Item, 'id' | 'created_at' | 'ports' | 'parts' | 'missings'>) {
         return await this.supabase.from('items').insert(item).select().single();
     }
 
-    async updateItem(id: string, updates: Partial<Omit<Item, 'ports' | 'parts' | 'missings'>>) {
+    async update(id: string, updates: Partial<Omit<Item, 'ports' | 'parts' | 'missings'>>) {
         return await this.supabase.from('items').update(updates).eq('id', id).select().single();
     }
 
-    async deleteItem(id: string) {
+    async delete(id: string) {
         return await this.supabase.from('items').delete().eq('id', id).select().single();
-    }
-
-    // ----- Ports -----
-
-    async insertPort(port: Omit<Port, 'id'>) {
-        return await this.supabase.from('ports').insert(port).select().single();
-    }
-
-    async updatePort(id: string, updates: Partial<Port>) {
-        return await this.supabase.from('ports').update(updates).eq('id', id).select().single();
-    }
-
-    async deletePort(id: string) {
-        return await this.supabase.from('ports').delete().eq('id', id).select().single();
-    }
-
-    // ----- Parts -----
-
-    async insertPart(part: Omit<Part, 'id'>) {
-        return await this.supabase.from('parts').insert(part).select().single();
-    }
-
-    async updatePart(id: string, updates: Partial<Part>) {
-        return await this.supabase.from('parts').update(updates).eq('id', id).select().single();
-    }
-
-    async deletePart(id: string) {
-        return await this.supabase.from('parts').delete().eq('id', id).select().single();
     }
 
     // ----- Linking: item_ports -----
@@ -96,6 +63,18 @@ export default class ItemsRepository {
         return await this.supabase.from('item_ports').delete().match({ item_id: itemId, port: portId });
     }
 
+    async unlinkItemFromAllPort(itemId: string) {
+        return await this.supabase.from('item_ports').delete().match({ item_id: itemId });
+    }
+
+    async linkItemToAllPort(itemId: string, portIds: Set<string>) {
+        const inserts = Array.from(portIds).map((portId) => ({
+            item_id: itemId,
+            port: portId,
+        }));
+        return await this.supabase.from('item_ports').insert(inserts);
+    }
+
     // ----- Linking: item_parts -----
 
     async linkItemToPart(itemId: string, partId: string) {
@@ -106,6 +85,18 @@ export default class ItemsRepository {
         return await this.supabase.from('item_parts').delete().match({ item_id: itemId, part: partId });
     }
 
+    async unlinkItemFromAllPart(itemId: string) {
+        return await this.supabase.from('item_parts').delete().match({ item_id: itemId });
+    }
+
+    async linkItemToAllPart(itemId: string, partIds: Set<string>) {
+        const inserts = Array.from(partIds).map((partId) => ({
+            item_id: itemId,
+            part: partId,
+        }));
+        return await this.supabase.from('item_parts').insert(inserts);
+    }
+
     // ----- Linking: item_missings -----
 
     async linkItemToMissing(itemId: string, partId: string) {
@@ -114,5 +105,17 @@ export default class ItemsRepository {
 
     async unlinkItemFromMissing(itemId: string, partId: string) {
         return await this.supabase.from('item_missings').delete().match({ item_id: itemId, part: partId });
+    }
+
+    async unlinkItemFromAllMissing(itemId: string) {
+        return await this.supabase.from('item_missings').delete().match({ item_id: itemId });
+    }
+
+    async linkItemToAllMissing(itemId: string, missingIds: Set<string>) {
+        const inserts = Array.from(missingIds).map((partId) => ({
+            item_id: itemId,
+            part: partId,
+        }));
+        return await this.supabase.from('item_missings').insert(inserts);
     }
 }
