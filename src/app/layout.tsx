@@ -35,7 +35,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                 Triton Gaming Inventory
               </h1>
               <p className="text-gray-500 text-sm sm:text-base mt-1">
-                A clean and calm interface for tracking your devices.
+                Look for anything you need.
               </p>
             </div>
           </header>
@@ -43,7 +43,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <main className="flex-grow">{children}</main>
 
           <footer className="mt-16 text-center text-sm text-gray-400">
-            &copy; 2025 Triton Gaming — Crafted with care
+            &copy; 2025 Triton Gaming — Event Logistics Team
           </footer>
         </div>
       </body>

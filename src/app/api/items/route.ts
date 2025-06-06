@@ -11,7 +11,7 @@ export async function GET(_req: NextRequest) {
     const supabase = createClient(cookieStore);
 
     const itemsRepo = new ItemsRepository(supabase);
-    const { data, error } = await itemsRepo.getAllItems();
+    const { data, error } = await itemsRepo.getAll();
 
     if (error) return Response.json({ error: error.message }, { status: 500 });
     return Response.json({ items: data });
