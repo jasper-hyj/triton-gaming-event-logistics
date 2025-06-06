@@ -6,14 +6,15 @@ import { Installation } from './InstallationsRepository';
 
 export type Item = {
     id: string;
-    name: string;
-    type: string;
-    description: string;
-    password: string;
-    condition: string;
-    source: string;
-    provider: string;
-    note: string;
+    name: string | null;
+    type: string | null;
+    description: string | null;
+    password: string | null;
+    condition: string | null;
+    source: string | null;
+    provider: string | null;
+    note: string | null;
+
     created_at: string;
 
     installations: Installation[];
@@ -41,7 +42,7 @@ export default class ItemsRepository {
 
     // ----- Items -----
 
-    async insert(item: Omit<Item, 'id' | 'created_at' | 'ports' | 'parts' | 'missings'>) {
+    async insert(item: Omit<Item, 'created_at' | 'ports' | 'parts' | 'missings' | 'installations'>) {
         return await this.supabase.from('items').insert(item).select().single();
     }
 

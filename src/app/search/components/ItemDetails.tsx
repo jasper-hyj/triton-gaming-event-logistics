@@ -50,6 +50,12 @@ export default function ItemDetails({
     <div className="bg-white border border-gray-200 shadow-md rounded-xl p-6 mt-6 text-left">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
         <FieldEditable
+          label="Id"
+          value={editedItem.id ?? ''}
+          onChange={(v) => onChangeField('id', v)}
+          readOnly={!editMode}
+        />
+        <FieldEditable
           label="Name"
           value={editedItem.name ?? ''}
           onChange={(v) => onChangeField('name', v)}

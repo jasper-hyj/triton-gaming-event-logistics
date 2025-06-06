@@ -50,7 +50,7 @@ export default function SearchPage() {
 
 
   const handleSearch = async () => {
-    const itemId = query.trim().replaceAll(" ", "")
+    const itemId = query.trim().replaceAll(" ", "").toUpperCase();
     if (!itemId) return;
     setLoading(true);
     setError(null);
@@ -64,6 +64,7 @@ export default function SearchPage() {
       } else {
         setItem(data);
         setEditedItem({
+          id: data.id,
           name: data.name,
           type: data.type,
           condition: data.condition,
@@ -76,6 +77,45 @@ export default function SearchPage() {
       }
     } catch (e) {
       setError('Error fetching item.');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleCreateNew = async () => {
+    if (!query.trim()) return;
+
+    setLoading(true);
+    setError(null);
+
+    try {
+      // Create a new item with minimal default fields, using query as id
+      const newItemData = {
+        id: query.trim().replaceAll(' ', '').toUpperCase(),
+        name: null,
+        type: null,
+        description: null,
+        password: null,
+        condition: null,
+        source: null,
+        provider: null,
+        note: null,
+      };
+
+      const { error: createError } = await itemsRepo.insert(newItemData);
+      if (createError) {
+        setError('Failed to create new item.');
+        return;
+      }
+
+      const { data, error } = await itemsRepo.getById(newItemData.id);
+
+      setItem(data);
+      setEditedItem(newItemData);
+      setEditMode(true);
+      setError(null);
+    } catch (e) {
+      setError('Failed to create new item.');
     } finally {
       setLoading(false);
     }
@@ -138,7 +178,7 @@ export default function SearchPage() {
       await itemsRepo.linkItemToAllMissing(item.id, selectedMissings);
 
       // Reload updated item
-      const { data, error: reloadError } = await itemsRepo.getById(item.id);
+      const { data, error: reloadError } = await itemsRepo.getById((editedItem.id) ? editedItem.id : item.id);
       if (reloadError || !data) throw reloadError || new Error('Failed to reload item');
 
       setItem(data);
@@ -181,7 +221,20 @@ export default function SearchPage() {
           handleSearch={handleSearch}
         />
         {loading && <p className="text-blue-500 font-medium">Loading...</p>}
-        {error && <p className="text-red-500 font-medium">{error}</p>}
+        {error === 'Item not found.' ? (
+          <div className="text-center">
+            <p className="text-red-500 font-medium mb-2">{error}</p>
+            <button
+              onClick={handleCreateNew}
+              disabled={loading}
+              className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg font-semibold"
+            >
+              {loading ? 'Creating...' : `Create New Item "${query.trim()}"`}
+            </button>
+          </div>
+        ) : (
+          error && <p className="text-red-500 font-medium">{error}</p>
+        )}
 
         {item && (
           <>
