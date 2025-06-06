@@ -1,6 +1,7 @@
 import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 import { Part } from './PartsRepository';
 import { Port } from './PortsRepository';
+import { Installation } from './InstallationsRepository';
 
 
 export type Item = {
@@ -12,9 +13,10 @@ export type Item = {
     condition: string;
     source: string;
     provider: string;
-    installations: string[];
     note: string;
     created_at: string;
+
+    installations: Installation[];
     ports: Port[];
     parts: Part[];
     missings: Part[];
@@ -30,13 +32,11 @@ export default class ItemsRepository {
     // ----- View-based reads -----
 
     async getAll(): Promise<{ data: Item[] | null; error: Error | null }> {
-        const { data, error } = await this.supabase.from('view_items').select('*');
-        return { data, error };
+        return await this.supabase.from('view_items').select('*');
     }
 
     async getById(id: string): Promise<{ data: Item | null; error: Error | null }> {
-        const { data, error } = await this.supabase.from('view_items').select('*').eq('id', id).single();
-        return { data, error };
+        return await this.supabase.from('view_items').select('*').eq('id', id).single();
     }
 
     // ----- Items -----
@@ -53,69 +53,57 @@ export default class ItemsRepository {
         return await this.supabase.from('items').delete().eq('id', id).select().single();
     }
 
+    // ----- Generic linking helpers -----
+    private linkMany(table: string, itemId: string, key: string, ids: Set<string>) {
+        const inserts = Array.from(ids).map((val) => ({ item_id: itemId, [key]: val }));
+        return this.supabase.from(table).insert(inserts);
+    }
+
+    private unlinkAll(table: string, itemId: string) {
+        return this.supabase.from(table).delete().match({ item_id: itemId });
+    }
+
+    private linkOne(table: string, itemId: string, key: string, value: string) {
+        return this.supabase.from(table).insert({ item_id: itemId, [key]: value });
+    }
+
+    private unlinkOne(table: string, itemId: string, key: string, value: string) {
+        return this.supabase.from(table).delete().match({ item_id: itemId, [key]: value });
+    }
+
     // ----- Linking: item_ports -----
-
-    async linkItemToPort(itemId: string, portId: string) {
-        return await this.supabase.from('item_ports').insert({ item_id: itemId, port: portId });
-    }
-
-    async unlinkItemFromPort(itemId: string, portId: string) {
-        return await this.supabase.from('item_ports').delete().match({ item_id: itemId, port: portId });
-    }
-
     async unlinkItemFromAllPort(itemId: string) {
-        return await this.supabase.from('item_ports').delete().match({ item_id: itemId });
+        return this.unlinkAll('item_ports', itemId);
     }
 
     async linkItemToAllPort(itemId: string, portIds: Set<string>) {
-        const inserts = Array.from(portIds).map((portId) => ({
-            item_id: itemId,
-            port: portId,
-        }));
-        return await this.supabase.from('item_ports').insert(inserts);
+        return this.linkMany('item_ports', itemId, 'port', portIds);
     }
 
     // ----- Linking: item_parts -----
-
-    async linkItemToPart(itemId: string, partId: string) {
-        return await this.supabase.from('item_parts').insert({ item_id: itemId, part: partId });
-    }
-
-    async unlinkItemFromPart(itemId: string, partId: string) {
-        return await this.supabase.from('item_parts').delete().match({ item_id: itemId, part: partId });
-    }
-
     async unlinkItemFromAllPart(itemId: string) {
-        return await this.supabase.from('item_parts').delete().match({ item_id: itemId });
+        return this.unlinkAll('item_parts', itemId);
     }
 
     async linkItemToAllPart(itemId: string, partIds: Set<string>) {
-        const inserts = Array.from(partIds).map((partId) => ({
-            item_id: itemId,
-            part: partId,
-        }));
-        return await this.supabase.from('item_parts').insert(inserts);
+        return this.linkMany('item_parts', itemId, 'part', partIds);
     }
 
     // ----- Linking: item_missings -----
-
-    async linkItemToMissing(itemId: string, partId: string) {
-        return await this.supabase.from('item_missings').insert({ item_id: itemId, part: partId });
-    }
-
-    async unlinkItemFromMissing(itemId: string, partId: string) {
-        return await this.supabase.from('item_missings').delete().match({ item_id: itemId, part: partId });
-    }
-
     async unlinkItemFromAllMissing(itemId: string) {
-        return await this.supabase.from('item_missings').delete().match({ item_id: itemId });
+        return this.unlinkAll('item_missings', itemId);
     }
 
     async linkItemToAllMissing(itemId: string, missingIds: Set<string>) {
-        const inserts = Array.from(missingIds).map((partId) => ({
-            item_id: itemId,
-            part: partId,
-        }));
-        return await this.supabase.from('item_missings').insert(inserts);
+        return this.linkMany('item_missings', itemId, 'part', missingIds);
+    }
+
+    // ----- Linking: item_installations -----
+    async unlinkItemFromAllInstallation(itemId: string) {
+        return this.unlinkAll('item_installations', itemId);
+    }
+
+    async linkItemToAllInstallation(itemId: string, installationIds: Set<string>) {
+        return this.linkMany('item_installations', itemId, 'installation', installationIds);
     }
 }

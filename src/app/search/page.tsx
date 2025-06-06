@@ -8,6 +8,7 @@ import { useState, useEffect } from 'react';
 import PortsRepository, { Port } from '@/utils/supabase/repositories/PortsRepository';
 import ItemDetails from './components/ItemDetails';
 import ItemSearchBar from './components/ItemSearchBar';
+import InstallationsRepository, { Installation } from '@/utils/supabase/repositories/InstallationsRepository';
 
 
 export default function SearchPage() {
@@ -15,6 +16,7 @@ export default function SearchPage() {
   const supabase = createClient();
 
   // Initialize repositories
+  const installationsRepo = new InstallationsRepository(supabase);
   const itemsRepo = new ItemsRepository(supabase);
   const partsRepo = new PartsRepository(supabase);
   const portsRepo = new PortsRepository(supabase);
@@ -27,6 +29,7 @@ export default function SearchPage() {
   const [editMode, setEditMode] = useState(false);
 
   // Ports, Parts lists for selects
+  const [allInstallations, setAllInstallations] = useState<Installation[]>([]);
   const [allPorts, setAllPorts] = useState<Port[]>([]);
   const [allParts, setAllParts] = useState<Part[]>([]);
 
@@ -38,6 +41,9 @@ export default function SearchPage() {
 
       const partsResult = await partsRepo.getAll();
       if (!partsResult.error && partsResult.data) setAllParts(partsResult.data);
+
+      const installationsResult = await installationsRepo.getAll();
+      if (!installationsResult.error && installationsResult.data) setAllInstallations(installationsResult.data);
     };
     fetchPortsAndParts();
   }, [supabase]);
@@ -64,7 +70,6 @@ export default function SearchPage() {
           provider: data.provider,
           source: data.source,
           password: data.password,
-          installations: data.installations,
           note: data.note,
           description: data.description,
         });
@@ -83,6 +88,7 @@ export default function SearchPage() {
 
   // Handle multi-select for ports and parts
   // For simplicity, we'll store selected port ids and part ids separately here
+  const [selectedInstallations, setSelectedInstallations] = useState<Set<string>>(new Set());
   const [selectedPorts, setSelectedPorts] = useState<Set<string>>(new Set());
   const [selectedParts, setSelectedParts] = useState<Set<string>>(new Set());
   const [selectedMissings, setSelectedMissings] = useState<Set<string>>(new Set());
@@ -90,10 +96,12 @@ export default function SearchPage() {
   // When item loads, update selections
   useEffect(() => {
     if (item) {
+      setSelectedInstallations(new Set(item.installations.map((p) => p.id)));
       setSelectedPorts(new Set(item.ports.map((p) => p.id)));
       setSelectedParts(new Set(item.parts.map((p) => p.id)));
       setSelectedMissings(new Set(item.missings.map((p) => p.id)));
     } else {
+      setSelectedInstallations(new Set());
       setSelectedPorts(new Set());
       setSelectedParts(new Set());
       setSelectedMissings(new Set());
@@ -119,10 +127,13 @@ export default function SearchPage() {
       const { error: updateError } = await itemsRepo.update(item.id, editedItem);
       if (updateError) throw updateError;
 
+      await itemsRepo.unlinkItemFromAllInstallation(item.id);
       await itemsRepo.unlinkItemFromAllPort(item.id);
       await itemsRepo.unlinkItemFromAllPart(item.id);
       await itemsRepo.unlinkItemFromAllMissing(item.id);
 
+      
+      await itemsRepo.linkItemToAllInstallation(item.id, selectedInstallations);
       await itemsRepo.linkItemToAllPort(item.id, selectedPorts);
       await itemsRepo.linkItemToAllPart(item.id, selectedParts);
       await itemsRepo.linkItemToAllMissing(item.id, selectedMissings);
@@ -176,7 +187,7 @@ export default function SearchPage() {
         {item && (
           <>
             <div className="flex justify-between items-center mt-6">
-              <h2 className="text-2xl font-semibold text-gray-800">{item.name}</h2>
+              <h2 className="text-3xl font-semibold text-gray-800 pl-1">{item.id}</h2>
               <button
                 onClick={() => {
                   if (editMode) handleSave();
@@ -194,8 +205,11 @@ export default function SearchPage() {
               editedItem={editedItem}
               onChangeField={onChangeField}
               editMode={editMode}
+              allInstallations={allInstallations}
               allPorts={allPorts}
               allParts={allParts}
+              selectedInstallations={selectedInstallations}
+              toggleSelectedInstallations={(id) => toggleSelection(id, setSelectedInstallations)}
               selectedPorts={selectedPorts}
               toggleSelectedPort={(id) => toggleSelection(id, setSelectedPorts)}
               selectedParts={selectedParts}
