@@ -18,7 +18,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en" className="scroll-smooth bg-white text-gray-800">
       <body className={`${nunito.className} min-h-screen flex flex-col antialiased`}>
         <div className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-8 py-8 flex-grow flex flex-col">
-          <header className="mb-10 flex flex-col sm:flex-row items-center sm:items-start gap-4 sm:gap-6">
+          <header className="mb-10 flex flex-col sm:flex-row items-center justify-center text-center gap-4 sm:gap-6">
             <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-md bg-gray-100 flex items-center justify-center shadow-sm overflow-hidden">
               <Image
                 src={TGLogo}

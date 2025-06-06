@@ -1,5 +1,4 @@
 'use client';
-
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import ItemsRepository, { Item } from '@/utils/supabase/repositories/ItemsRepository';
@@ -9,6 +8,7 @@ import PortsRepository, { Port } from '@/utils/supabase/repositories/PortsReposi
 import ItemDetails from './components/ItemDetails';
 import ItemSearchBar from './components/ItemSearchBar';
 import InstallationsRepository, { Installation } from '@/utils/supabase/repositories/InstallationsRepository';
+import TypesRepository, { Type } from '@/utils/supabase/repositories/TypesRepository';
 
 
 export default function SearchPage() {
@@ -16,6 +16,7 @@ export default function SearchPage() {
   const supabase = createClient();
 
   // Initialize repositories
+  const typesRepo = new TypesRepository(supabase);
   const installationsRepo = new InstallationsRepository(supabase);
   const itemsRepo = new ItemsRepository(supabase);
   const partsRepo = new PartsRepository(supabase);
@@ -29,6 +30,7 @@ export default function SearchPage() {
   const [editMode, setEditMode] = useState(false);
 
   // Ports, Parts lists for selects
+  const [allTypes, setAllTypes] = useState<Type[]>([]);
   const [allInstallations, setAllInstallations] = useState<Installation[]>([]);
   const [allPorts, setAllPorts] = useState<Port[]>([]);
   const [allParts, setAllParts] = useState<Part[]>([]);
@@ -36,14 +38,17 @@ export default function SearchPage() {
   // Load all ports and parts on mount for select options
   useEffect(() => {
     const fetchPortsAndParts = async () => {
+      const typesResult = await typesRepo.getAll();
+      if (!typesResult.error && typesResult.data) setAllTypes(typesResult.data);
+
+      const installationsResult = await installationsRepo.getAll();
+      if (!installationsResult.error && installationsResult.data) setAllInstallations(installationsResult.data);
+
       const portsResult = await portsRepo.getAll();
       if (!portsResult.error && portsResult.data) setAllPorts(portsResult.data);
 
       const partsResult = await partsRepo.getAll();
       if (!partsResult.error && partsResult.data) setAllParts(partsResult.data);
-
-      const installationsResult = await installationsRepo.getAll();
-      if (!installationsResult.error && installationsResult.data) setAllInstallations(installationsResult.data);
     };
     fetchPortsAndParts();
   }, [supabase]);
@@ -109,7 +114,6 @@ export default function SearchPage() {
       }
 
       const { data, error } = await itemsRepo.getById(newItemData.id);
-
       setItem(data);
       setEditedItem(newItemData);
       setEditMode(true);
@@ -257,6 +261,7 @@ export default function SearchPage() {
               editedItem={editedItem}
               onChangeField={onChangeField}
               editMode={editMode}
+              allTypes={allTypes}
               allInstallations={allInstallations}
               allPorts={allPorts}
               allParts={allParts}
