@@ -1,10 +1,12 @@
 'use client';
 
+import { useRouter } from 'next/navigation';
 import { createClient } from '@/utils/supabase/client';
 import ItemsRepository, { Item } from '@/utils/supabase/repositories/ItemsRepository';
 import { useState } from 'react';
 
 export default function SearchPage() {
+  const router = useRouter();
   const supabase = createClient();
   const repo = new ItemsRepository(supabase);
 
@@ -33,8 +35,29 @@ export default function SearchPage() {
   };
 
   return (
-    <main className="min-h-screen bg-white px-4 sm:px-6 py-12">
-      <div className="max-w-4xl mx-auto text-center space-y-8">
+    <main className="min-h-screen bg-white px-4 sm:px-6 py-12 max-w-4xl mx-auto">
+      {/* Back to Home Button */}
+      <button
+        onClick={() => router.push('/')}
+        className="mb-8 inline-flex items-center text-gray-600 hover:text-blue-600 transition"
+        aria-label="Back to home"
+      >
+        <svg
+          className="w-5 h-5 mr-1 stroke-current"
+          fill="none"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          viewBox="0 0 24 24"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-hidden="true"
+        >
+          <path d="M15 18l-6-6 6-6"></path>
+        </svg>
+        Home
+      </button>
+
+      <div className="text-center space-y-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
           Search for a Device
         </h1>
