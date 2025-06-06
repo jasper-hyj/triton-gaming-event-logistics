@@ -19,7 +19,8 @@ export default function TagSelector<T extends { id: string }>({
       {allItems.length === 0 ? (
         <p className="text-gray-400 italic">No options</p>
       ) : (
-        <ul className="flex flex-wrap gap-2 max-h-48 overflow-y-auto border border-gray-200 rounded p-2 bg-white">
+        <ul className={`min-h-[46px] flex flex-wrap gap-2 max-h-48 overflow-y-auto 
+          ${disabled ? '' : 'border border-gray-200'} rounded p-2 bg-white`}>
           {allItems.map(({ id }) => {
             const selected = selectedIds.has(id);
             return (
