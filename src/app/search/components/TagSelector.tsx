@@ -28,7 +28,8 @@ export default function TagSelector<T extends { id: string }>({
                 onClick={() => !disabled && toggleSelected(id)}
                 className={`cursor-pointer select-none px-3 py-1 rounded-full text-sm font-medium
                   ${selected ? `${color} text-gray-900` : 'bg-gray-100 text-gray-500'}
-                  ${disabled ? 'cursor-default' : 'hover:bg-gray-200'}`}
+                  ${disabled ? 'cursor-default' : 'hover:bg-gray-200'}
+                  ${(!selected) && disabled ? 'hidden' : ''}`}
                 title={id}
                 aria-pressed={selected}
                 role="button"

@@ -1,6 +1,7 @@
 import { Item } from "@/utils/supabase/repositories/ItemsRepository";
 import { Part } from "@/utils/supabase/repositories/PartsRepository";
 import { Port } from "@/utils/supabase/repositories/PortsRepository";
+import { Installation } from "@/utils/supabase/repositories/InstallationsRepository";
 import TagSelector from "./TagSelector";
 import FieldEditable from "./FieldEditable";
 import Field from "./Field";
@@ -11,9 +12,13 @@ type ItemDetailsProps = {
   onChangeField: (field: keyof Partial<Omit<Item, 'ports' | 'parts' | 'missings'>>, value: string | string[]) => void;
   editMode: boolean;
 
+  allInstallations: Installation[];
   allPorts: Port[];
   allParts: Part[];
 
+  
+  selectedInstallations: Set<string>;
+  toggleSelectedInstallations: (id: string) => void;
   selectedPorts: Set<string>;
   toggleSelectedPort: (id: string) => void;
 
@@ -29,8 +34,11 @@ export default function ItemDetails({
   editedItem,
   onChangeField,
   editMode,
+  allInstallations,
   allPorts,
   allParts,
+  selectedInstallations,
+  toggleSelectedInstallations,
   selectedPorts,
   toggleSelectedPort,
   selectedParts,
@@ -78,13 +86,6 @@ export default function ItemDetails({
           readOnly={!editMode}
         />
         <FieldEditable
-          label="Installations"
-          value={(editedItem.installations ?? []).join(', ')}
-          onChange={(v) => onChangeField('installations', v.split(',').map((s) => s.trim()))}
-          placeholder="Comma separated"
-          readOnly={!editMode}
-        />
-        <FieldEditable
           label="Note"
           value={editedItem.note ?? ''}
           onChange={(v) => onChangeField('note', v)}
@@ -102,6 +103,17 @@ export default function ItemDetails({
         <Field label="Created At" value={new Date(item.created_at).toLocaleString()} />
       </div>
 
+      <div className="grid mt-6">
+        <TagSelector
+          title="Installations"
+          allItems={allInstallations}
+          selectedIds={selectedInstallations}
+          toggleSelected={toggleSelectedInstallations}
+          disabled={!editMode}
+          color="bg-orange-100"
+        />
+      </div>
+      
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
         <TagSelector
           title="Ports"
