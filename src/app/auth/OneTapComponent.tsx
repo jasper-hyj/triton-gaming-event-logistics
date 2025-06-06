@@ -28,8 +28,8 @@ const OneTapPrompt = () => {
           console.error('One Tap sign-in failed:', err)
         }
       },
-      auto_select: false,
-      cancel_on_tap_outside: false,
+      auto_select: true,
+      cancel_on_tap_outside: true,
     })
 
     window.google.accounts.id.prompt()
