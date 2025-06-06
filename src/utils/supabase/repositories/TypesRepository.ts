@@ -1,4 +1,3 @@
-// repositories/TypesRepository.ts
 import BaseRepository from './BaseRepository';
 import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 

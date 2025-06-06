@@ -9,7 +9,7 @@ import TGLogo from '@/img/TG Color Logo.png';
 const nunito = Nunito({ subsets: ['latin'], weight: ['400', '600', '700'] });
 
 export const metadata: Metadata = {
-  title: 'Triton Gaming Inventory',
+  title: 'Triton Gaming ELO',
   description: 'A gentle way to manage your gaming gear',
 };
 
@@ -32,7 +32,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             <div className="text-center sm:text-left">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 tracking-tight">
-                Triton Gaming Inventory
+                Triton Gaming ELO
               </h1>
               <p className="text-gray-500 text-sm sm:text-base mt-1">
                 Look for anything you need.
