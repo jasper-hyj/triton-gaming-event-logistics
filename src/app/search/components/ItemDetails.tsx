@@ -8,7 +8,7 @@ import Field from "./Field";
 type ItemDetailsProps = {
   item: Item;
   editedItem: Partial<Omit<Item, 'ports' | 'parts' | 'missings'>>;
-  onChangeField: (field: keyof Partial<Omit<Item, 'ports' | 'parts' | 'missings'>>, value: any) => void;
+  onChangeField: (field: keyof Partial<Omit<Item, 'ports' | 'parts' | 'missings'>>, value: string | string[]) => void;
   editMode: boolean;
 
   allPorts: Port[];

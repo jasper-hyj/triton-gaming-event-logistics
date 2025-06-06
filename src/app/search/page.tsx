@@ -77,7 +77,7 @@ export default function SearchPage() {
   };
 
   // Handle field changes
-  const onChangeField = (field: keyof typeof editedItem, value: any) => {
+  const onChangeField = (field: keyof typeof editedItem, value: string | string[]) => {
     setEditedItem((prev) => ({ ...prev, [field]: value }));
   };
 
