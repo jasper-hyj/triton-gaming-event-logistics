@@ -9,6 +9,8 @@ import ItemDetails from './components/ItemDetails';
 import ItemSearchBar from './components/ItemSearchBar';
 import InstallationsRepository, { Installation } from '@/utils/supabase/repositories/InstallationsRepository';
 import TypesRepository, { Type } from '@/utils/supabase/repositories/TypesRepository';
+import ConditionsRepository, { Condition } from '@/utils/supabase/repositories/ConditionsRepository';
+import SourcesRepository, { Source } from '@/utils/supabase/repositories/SourcesRepository';
 
 
 export default function SearchPage() {
@@ -17,6 +19,8 @@ export default function SearchPage() {
 
   // Initialize repositories
   const typesRepo = new TypesRepository(supabase);
+  const conditionsRepo = new ConditionsRepository(supabase);
+  const sourcesRepo = new SourcesRepository(supabase);
   const installationsRepo = new InstallationsRepository(supabase);
   const itemsRepo = new ItemsRepository(supabase);
   const partsRepo = new PartsRepository(supabase);
@@ -31,6 +35,8 @@ export default function SearchPage() {
 
   // Ports, Parts lists for selects
   const [allTypes, setAllTypes] = useState<Type[]>([]);
+  const [allConditions, setAllConditions] = useState<Condition[]>([]);
+  const [allSources, setAllSources] = useState<Source[]>([]);
   const [allInstallations, setAllInstallations] = useState<Installation[]>([]);
   const [allPorts, setAllPorts] = useState<Port[]>([]);
   const [allParts, setAllParts] = useState<Part[]>([]);
@@ -40,6 +46,12 @@ export default function SearchPage() {
     const fetchPortsAndParts = async () => {
       const typesResult = await typesRepo.getAll();
       if (!typesResult.error && typesResult.data) setAllTypes(typesResult.data);
+
+      const conditionsResult = await conditionsRepo.getAll();
+      if (!conditionsResult.error && conditionsResult.data) setAllConditions(conditionsResult.data);
+
+      const sourcesResult = await sourcesRepo.getAll();
+      if (!sourcesResult.error && sourcesResult.data) setAllSources(sourcesResult.data);
 
       const installationsResult = await installationsRepo.getAll();
       if (!installationsResult.error && installationsResult.data) setAllInstallations(installationsResult.data);
@@ -262,6 +274,8 @@ export default function SearchPage() {
               onChangeField={onChangeField}
               editMode={editMode}
               allTypes={allTypes}
+              allConditions={allConditions}
+              allSources={allSources}
               allInstallations={allInstallations}
               allPorts={allPorts}
               allParts={allParts}

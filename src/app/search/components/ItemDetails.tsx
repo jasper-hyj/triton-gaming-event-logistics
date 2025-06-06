@@ -7,6 +7,8 @@ import FieldEditable from "./FieldEditable";
 import Field from "./Field";
 import FieldDropdown from "./FieldDropdown";
 import { Type } from "@/utils/supabase/repositories/TypesRepository";
+import { Condition } from "@/utils/supabase/repositories/ConditionsRepository";
+import { Source } from "@/utils/supabase/repositories/SourcesRepository";
 
 type ItemDetailsProps = {
   item: Item;
@@ -15,10 +17,11 @@ type ItemDetailsProps = {
   editMode: boolean;
 
   allTypes: Type[];
+  allConditions: Condition[];
+  allSources: Source[];
   allInstallations: Installation[];
   allPorts: Port[];
   allParts: Part[];
-
 
   selectedInstallations: Set<string>;
   toggleSelectedInstallations: (id: string) => void;
@@ -38,6 +41,8 @@ export default function ItemDetails({
   onChangeField,
   editMode,
   allTypes,
+  allConditions,
+  allSources,
   allInstallations,
   allPorts,
   allParts,
@@ -72,10 +77,18 @@ export default function ItemDetails({
           onChange={(v) => onChangeField("type", v)}
           readOnly={!editMode}
         />
-        <FieldEditable
+        <FieldDropdown
           label="Condition"
-          value={editedItem.condition ?? ''}
-          onChange={(v) => onChangeField('condition', v)}
+          value={editedItem.condition ?? ""}
+          options={allConditions.map((t) => t.id)}
+          onChange={(v) => onChangeField("condition", v)}
+          readOnly={!editMode}
+        />
+        <FieldDropdown
+          label="Source"
+          value={editedItem.source ?? ''}
+          options={allSources.map((t) => t.id)}
+          onChange={(v) => onChangeField('source', v)}
           readOnly={!editMode}
         />
         <FieldEditable
@@ -85,28 +98,16 @@ export default function ItemDetails({
           readOnly={!editMode}
         />
         <FieldEditable
-          label="Source"
-          value={editedItem.source ?? ''}
-          onChange={(v) => onChangeField('source', v)}
-          readOnly={!editMode}
-        />
-        <FieldEditable
-          label="Password"
-          value={editedItem.password ?? ''}
-          onChange={(v) => onChangeField('password', v)}
+          label="Description"
+          value={editedItem.description ?? ''}
+          onChange={(v) => onChangeField('description', v)}
+          textarea
           readOnly={!editMode}
         />
         <FieldEditable
           label="Note"
           value={editedItem.note ?? ''}
           onChange={(v) => onChangeField('note', v)}
-          textarea
-          readOnly={!editMode}
-        />
-        <FieldEditable
-          label="Description"
-          value={editedItem.description ?? ''}
-          onChange={(v) => onChangeField('description', v)}
           textarea
           readOnly={!editMode}
         />

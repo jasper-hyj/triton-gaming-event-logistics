@@ -2,14 +2,12 @@
 import BaseRepository from './BaseRepository';
 import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 
-export type Installation = {
+export type Condition = {
   id: string;
-  platform: string;
-  size: number;
 };
 
-export default class InstallationsRepository extends BaseRepository<Installation> {
+export default class ConditionsRepository extends BaseRepository<Condition> {
   constructor(supabase: SupabaseClient) {
-    super(supabase, 'installations');
+    super(supabase, 'conditions');
   }
 }

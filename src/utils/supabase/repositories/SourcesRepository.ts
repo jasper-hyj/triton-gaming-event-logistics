@@ -1,13 +1,13 @@
-// repositories/TypesRepository.ts
+// repositories/InstallationsRepository.ts
 import BaseRepository from './BaseRepository';
 import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 
-export type Type = {
+export type Source = {
   id: string;
 };
 
-export default class TypesRepository extends BaseRepository<Type> {
+export default class SourcesRepository extends BaseRepository<Source> {
   constructor(supabase: SupabaseClient) {
-    super(supabase, 'types');
+    super(supabase, 'sources');
   }
 }
