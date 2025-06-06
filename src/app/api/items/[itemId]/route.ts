@@ -18,7 +18,7 @@ export async function GET(_req: NextRequest, { params }: Context) {
 
     const itemsRepo = new ItemsRepository(supabase);
 
-    const { data: item, error } = await itemsRepo.getById(itemId);
+    const { data: item, error } = await itemsRepo.getItemById(itemId);
 
     if (error) {
         return NextResponse.json({ error: error.message }, { status: 500 });
