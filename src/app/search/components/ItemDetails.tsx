@@ -5,6 +5,8 @@ import { Installation } from "@/utils/supabase/repositories/InstallationsReposit
 import TagSelector from "./TagSelector";
 import FieldEditable from "./FieldEditable";
 import Field from "./Field";
+import FieldDropdown from "./FieldDropdown";
+import { Type } from "@/utils/supabase/repositories/TypesRepository";
 
 type ItemDetailsProps = {
   item: Item;
@@ -12,11 +14,12 @@ type ItemDetailsProps = {
   onChangeField: (field: keyof Partial<Omit<Item, 'ports' | 'parts' | 'missings'>>, value: string | string[]) => void;
   editMode: boolean;
 
+  allTypes: Type[];
   allInstallations: Installation[];
   allPorts: Port[];
   allParts: Part[];
 
-  
+
   selectedInstallations: Set<string>;
   toggleSelectedInstallations: (id: string) => void;
   selectedPorts: Set<string>;
@@ -34,6 +37,7 @@ export default function ItemDetails({
   editedItem,
   onChangeField,
   editMode,
+  allTypes,
   allInstallations,
   allPorts,
   allParts,
@@ -61,10 +65,11 @@ export default function ItemDetails({
           onChange={(v) => onChangeField('name', v)}
           readOnly={!editMode}
         />
-        <FieldEditable
+        <FieldDropdown
           label="Type"
-          value={editedItem.type ?? ''}
-          onChange={(v) => onChangeField('type', v)}
+          value={editedItem.type ?? ""}
+          options={allTypes.map((t) => t.id)}
+          onChange={(v) => onChangeField("type", v)}
           readOnly={!editMode}
         />
         <FieldEditable
@@ -119,7 +124,7 @@ export default function ItemDetails({
           color="bg-orange-100"
         />
       </div>
-      
+
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
         <TagSelector
           title="Ports"
