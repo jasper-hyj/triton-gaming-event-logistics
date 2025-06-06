@@ -1,10 +1,10 @@
 import { Item } from "@/utils/supabase/repositories/ItemsRepository";
 import { Part } from "@/utils/supabase/repositories/PartsRepository";
 import { Port } from "@/utils/supabase/repositories/PortsRepository";
+import { Installation } from "@/utils/supabase/repositories/InstallationsRepository";
 import TagSelector from "./TagSelector";
 import FieldEditable from "./FieldEditable";
 import Field from "./Field";
-import { Installation } from "@/utils/supabase/repositories/InstallationsRepository";
 
 type ItemDetailsProps = {
   item: Item;
@@ -19,7 +19,6 @@ type ItemDetailsProps = {
   
   selectedInstallations: Set<string>;
   toggleSelectedInstallations: (id: string) => void;
-
   selectedPorts: Set<string>;
   toggleSelectedPort: (id: string) => void;
 
@@ -114,7 +113,7 @@ export default function ItemDetails({
           color="bg-orange-100"
         />
       </div>
-
+      
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 mt-6">
         <TagSelector
           title="Ports"

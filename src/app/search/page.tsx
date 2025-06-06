@@ -132,7 +132,6 @@ export default function SearchPage() {
       await itemsRepo.unlinkItemFromAllPart(item.id);
       await itemsRepo.unlinkItemFromAllMissing(item.id);
 
-      
       await itemsRepo.linkItemToAllInstallation(item.id, selectedInstallations);
       await itemsRepo.linkItemToAllPort(item.id, selectedPorts);
       await itemsRepo.linkItemToAllPart(item.id, selectedParts);
