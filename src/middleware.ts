@@ -1,18 +1,27 @@
-import { updateSession } from '@/utils/supabase/middleware'
-import { NextRequest } from 'next/server'
+import { NextResponse, type NextRequest } from "next/server";
+import { createSupabaseReqResClient } from "./utils/supabase/server";
+
 export async function middleware(request: NextRequest) {
-    // update user's auth session
-    return await updateSession(request)
+  let response = NextResponse.next({
+    request: {
+      headers: request.headers,
+    },
+  });
+
+  const supabase = createSupabaseReqResClient(request, response);
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  // protects the "/account" route and its sub-routes
+  if (!user && request.nextUrl.pathname.startsWith("/account")) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  return response;
 }
+
 export const config = {
-    matcher: [
-        /*
-         * Match all request paths except for the ones starting with:
-         * - _next/static (static files)
-         * - _next/image (image optimization files)
-         * - favicon.ico (favicon file)
-         * Feel free to modify this pattern to include more paths.
-         */
-        '/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)',
-    ],
-}
+  matcher: ["/", "/account/:path*"],
+};

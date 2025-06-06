@@ -1,6 +1,5 @@
 import BaseRepository from './BaseRepository';
-import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
-
+import { SupabaseClient } from '@supabase/supabase-js';
 export type Source = {
   id: string;
 };
