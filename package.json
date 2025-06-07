@@ -7,10 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "eslint-check-only": "npx eslint",
-    "eslint-fix": "npx eslint --fix",
-    "prettier:format": "npx prettier --write .",
-    "prettier:check": "prettier --check ."
+    "eslint:check": "npx eslint",
+    "eslint:fix": "npx eslint --fix",
+    "prettier:check": "npx prettier --check .",
+    "prettier:format": "npx prettier --write ."
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
