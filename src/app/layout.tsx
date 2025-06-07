@@ -5,7 +5,7 @@ import Image from 'next/image';
 import TGLogo from '@/img/TG Color Logo.png';
 import { createSupabaseServerComponentClient } from '@/utils/supabase/server';
 import Link from 'next/link';
-import GoogleAuthOneTap from './auth/google/GoogleAuthOneTap';
+import GoogleAuthOneTap from './login/google/GoogleAuthOneTap';
 
 const nunito = Nunito({ subsets: ['latin'], weight: ['400', '600', '700'] });
 
