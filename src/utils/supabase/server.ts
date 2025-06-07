@@ -1,3 +1,4 @@
+"use server";
 import { type NextRequest, type NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
@@ -16,21 +17,21 @@ export async function createSupabaseServerClient(component: boolean = false) {
         setAll(cookiesToSet) {
           if (component) return;
           cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
+            cookieStore.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 }
 
-export function createSupabaseServerComponentClient() {
+export async function createSupabaseServerComponentClient() {
   return createSupabaseServerClient(true);
 }
 
-export function createSupabaseReqResClient(
+export async function createSupabaseReqResClient(
   req: NextRequest,
-  res: NextResponse
+  res: NextResponse,
 ) {
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -42,10 +43,10 @@ export function createSupabaseReqResClient(
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) =>
-            res.cookies.set(name, value, options)
+            res.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 }

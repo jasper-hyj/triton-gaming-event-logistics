@@ -1,44 +1,36 @@
-'use client';
-import BackHomeButton from '@/app/components/BackHomeButton';
-import { createSupabaseBrowserClient } from '@/utils/supabase/client';
-import LocationsRepository, { Location } from '@/utils/supabase/repositories/LocationsRepository';
-import useSession from '@/utils/supabase/use-session';
-import { useEffect, useState } from 'react';
-import LocationDetails from './components/LocationDetails';
-import LocationSearchBar from './components/LocationSearchBar';
-
+"use client";
+import BackHomeButton from "@/app/components/BackHomeButton";
+import LocationsRepository, {
+  Location,
+} from "@/lib/repositories/LocationsRepository";
+import { useState } from "react";
+import LocationDetails from "./components/LocationDetails";
+import LocationSearchBar from "./components/LocationSearchBar";
 
 export default function LocationSearchPage() {
-  const supabase = createSupabaseBrowserClient();
-
-  const user = useSession()?.user
-
   // Initialize repositories
-  const locationsRepo = new LocationsRepository(supabase);
+  const locationsRepo = new LocationsRepository();
 
   const [query, setQuery] = useState<string>("");
   const [loading, setLoading] = useState(false);
   const [location, setLocation] = useState<Location | null>(null);
 
-
   // Ports, Parts lists for selects
   const [allLocations, setAllLocations] = useState<Location[]>([]);
 
   // Load all ports and parts on mount for select options
-  useEffect(() => {
-    const fetchLocations = async () => {
-      const locationsResult = await locationsRepo.getAll();
-      if (!locationsResult.error && locationsResult.data) setAllLocations(locationsResult.data);
-
-    };
-    fetchLocations();
-  }, [supabase]);
+  const fetchLocations = async () => {
+    const locationsResult = await locationsRepo.getAll();
+    if (!locationsResult.error && locationsResult.data)
+      setAllLocations(locationsResult.data);
+  };
+  fetchLocations();
 
   const handleSearch = async (queryValue: string) => {
     const locationId = queryValue.trim();
     if (!locationId) return;
     setLoading(true);
-    const { data, error } = await locationsRepo.getById(locationId);
+    const { data } = await locationsRepo.getById(locationId);
     setLocation(data);
     setLoading(false);
   };
@@ -56,9 +48,7 @@ export default function LocationSearchPage() {
         />
         {location && (
           <>
-            <LocationDetails
-              location={location}
-            />
+            <LocationDetails location={location} />
           </>
         )}
       </div>

@@ -1,19 +1,20 @@
-import { Item } from "@/utils/supabase/repositories/ItemsRepository";
-import { Part } from "@/utils/supabase/repositories/PartsRepository";
-import { Port } from "@/utils/supabase/repositories/PortsRepository";
-import { Installation } from "@/utils/supabase/repositories/InstallationsRepository";
+import { Item } from "@/lib/repositories/ItemsRepository";
+import { Part } from "@/lib/repositories/PartsRepository";
+import { Port } from "@/lib/repositories/PortsRepository";
+import { Installation } from "@/lib/repositories/InstallationsRepository";
 import TagSelector from "./TagSelector";
-import FieldEditable from "./FieldEditable";
-import Field from "./Field";
-import FieldDropdown from "./FieldDropdown";
-import { Type } from "@/utils/supabase/repositories/TypesRepository";
-import { Condition } from "@/utils/supabase/repositories/ConditionsRepository";
-import { Source } from "@/utils/supabase/repositories/SourcesRepository";
+import { Type } from "@/lib/repositories/TypesRepository";
+import { Condition } from "@/lib/repositories/ConditionsRepository";
+import { Source } from "@/lib/repositories/SourcesRepository";
+import FormComponent from "./FormComponent";
 
 type ItemDetailsProps = {
   item: Item;
-  editedItem: Partial<Omit<Item, 'ports' | 'parts' | 'missings'>>;
-  onChangeField: (field: keyof Partial<Omit<Item, 'ports' | 'parts' | 'missings'>>, value: string | string[]) => void;
+  editedItem: Partial<Omit<Item, "ports" | "parts" | "missings">>;
+  onChangeField: (
+    field: keyof Partial<Omit<Item, "ports" | "parts" | "missings">>,
+    value: string | string[],
+  ) => void;
   editMode: boolean;
 
   allTypes: Type[];
@@ -55,64 +56,68 @@ export default function ItemDetails({
   selectedMissings,
   toggleSelectedMissing,
 }: ItemDetailsProps) {
+  const formComponent = new FormComponent();
   return (
     <div className="bg-white border border-gray-200 shadow-md rounded-xl p-6 mt-6 text-left">
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-700">
-        <FieldEditable
+        <formComponent.Editable
           label="Id"
-          value={editedItem.id ?? ''}
-          onChange={(v) => onChangeField('id', v)}
+          value={editedItem.id ?? ""}
+          onChange={(v) => onChangeField("id", v)}
           readOnly={!editMode}
         />
-        <FieldEditable
+        <formComponent.Editable
           label="Name"
-          value={editedItem.name ?? ''}
-          onChange={(v) => onChangeField('name', v)}
+          value={editedItem.name ?? ""}
+          onChange={(v) => onChangeField("name", v)}
           readOnly={!editMode}
         />
-        <FieldDropdown
+        <formComponent.Dropdown
           label="Type"
           value={editedItem.type ?? ""}
           options={allTypes}
           onChange={(v) => onChangeField("type", v)}
           readOnly={!editMode}
         />
-        <FieldDropdown
+        <formComponent.Dropdown
           label="Condition"
           value={editedItem.condition ?? ""}
           options={allConditions}
           onChange={(v) => onChangeField("condition", v)}
           readOnly={!editMode}
         />
-        <FieldDropdown
+        <formComponent.Dropdown
           label="Source"
-          value={editedItem.source ?? ''}
+          value={editedItem.source ?? ""}
           options={allSources}
-          onChange={(v) => onChangeField('source', v)}
+          onChange={(v) => onChangeField("source", v)}
           readOnly={!editMode}
         />
-        <FieldEditable
+        <formComponent.Editable
           label="Provider"
-          value={editedItem.provider ?? ''}
-          onChange={(v) => onChangeField('provider', v)}
+          value={editedItem.provider ?? ""}
+          onChange={(v) => onChangeField("provider", v)}
           readOnly={!editMode}
         />
-        <FieldEditable
+        <formComponent.Editable
           label="Description"
-          value={editedItem.description ?? ''}
-          onChange={(v) => onChangeField('description', v)}
+          value={editedItem.description ?? ""}
+          onChange={(v) => onChangeField("description", v)}
           textarea
           readOnly={!editMode}
         />
-        <FieldEditable
+        <formComponent.Editable
           label="Note"
-          value={editedItem.note ?? ''}
-          onChange={(v) => onChangeField('note', v)}
+          value={editedItem.note ?? ""}
+          onChange={(v) => onChangeField("note", v)}
           textarea
           readOnly={!editMode}
         />
 
-        <Field label="Created At" value={new Date(item.created_at).toLocaleString()} />
+        <formComponent.Text
+          label="Created At"
+          value={new Date(item.created_at).toLocaleString()}
+        />
       </div>
 
       <div className="grid mt-6">

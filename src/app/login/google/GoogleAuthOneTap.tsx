@@ -1,49 +1,49 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import Script from 'next/script'
-import { createSupabaseBrowserClient } from '@/utils/supabase/client'
-import { CredentialResponse } from 'google-one-tap'
+import { useEffect, useState, useCallback } from "react";
+import Script from "next/script";
+import { createSupabaseBrowserClient } from "@/utils/supabase/client";
+import { CredentialResponse } from "google-one-tap";
 
 const GoogleAuthOneTap = () => {
-  const [scriptLoaded, setScriptLoaded] = useState(false) // Check if the Script is loaded
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const supabase = createSupabaseBrowserClient();
 
-
-  const supabase = createSupabaseBrowserClient()
-  const handleCredential = async (credential: string) => {
-    try {
-      const { data, error } = await supabase.auth.signInWithIdToken({
-        provider: 'google',
+  const handleCredential = useCallback(
+    async (credential: string) => {
+      const { error } = await supabase.auth.signInWithIdToken({
+        provider: "google",
         token: credential,
-      })
-      if (error) throw error
-      window.location.reload()
-    } catch (err) {
-      console.error('Google One Tap error:', err)
-    }
-  }
+      });
+
+      if (!error) {
+        window.location.reload();
+      }
+    },
+    [supabase],
+  );
 
   useEffect(() => {
-    if (!scriptLoaded || !window.google?.accounts?.id) return
+    if (!scriptLoaded || !window.google?.accounts?.id) return;
 
     const setupOneTap = async () => {
-      const { data } = await supabase.auth.getSession()
-      if (data.session) return
+      const { data, error } = await supabase.auth.getSession();
+      if (error || data.session) return;
 
       window.google.accounts.id.initialize({
         client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
         callback: (res: CredentialResponse) => {
-          if (res.credential) handleCredential(res.credential)
+          if (res.credential) handleCredential(res.credential);
         },
         auto_select: true,
         cancel_on_tap_outside: true,
-      })
+      });
 
-      window.google.accounts.id.prompt()
-    }
+      window.google.accounts.id.prompt();
+    };
 
-    setupOneTap()
-  }, [scriptLoaded])
+    setupOneTap();
+  }, [scriptLoaded, supabase, handleCredential]);
 
   return (
     <Script
@@ -51,7 +51,7 @@ const GoogleAuthOneTap = () => {
       strategy="afterInteractive"
       onLoad={() => setScriptLoaded(true)}
     />
-  )
-}
+  );
+};
 
-export default GoogleAuthOneTap
+export default GoogleAuthOneTap;
