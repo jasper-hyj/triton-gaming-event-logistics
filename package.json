@@ -9,7 +9,8 @@
     "lint": "next lint",
     "eslint-check-only": "npx eslint",
     "eslint-fix": "npx eslint --fix",
-    "prettier": "npx prettier --write ."
+    "prettier:format": "npx prettier --write .",
+    "prettier:check": "prettier --check ."
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
