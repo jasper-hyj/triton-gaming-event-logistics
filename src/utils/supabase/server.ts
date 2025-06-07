@@ -1,3 +1,4 @@
+"use server";
 import { type NextRequest, type NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createServerClient } from "@supabase/ssr";
@@ -24,11 +25,11 @@ export async function createSupabaseServerClient(component: boolean = false) {
   );
 }
 
-export function createSupabaseServerComponentClient() {
+export async function createSupabaseServerComponentClient() {
   return createSupabaseServerClient(true);
 }
 
-export function createSupabaseReqResClient(
+export async function createSupabaseReqResClient(
   req: NextRequest,
   res: NextResponse,
 ) {
