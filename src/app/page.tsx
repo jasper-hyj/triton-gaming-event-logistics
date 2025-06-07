@@ -16,7 +16,7 @@ export default function HomePage() {
         🔍 Search for Items
       </Link>
       <Link
-        href="/location"
+        href="/search/location"
         className="px-5 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-700 transition duration-200 text-sm sm:text-base"
       >
         📍 Search for Locations

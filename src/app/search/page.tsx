@@ -11,10 +11,13 @@ import TypesRepository, { Type } from '@/utils/supabase/repositories/TypesReposi
 import ConditionsRepository, { Condition } from '@/utils/supabase/repositories/ConditionsRepository';
 import SourcesRepository, { Source } from '@/utils/supabase/repositories/SourcesRepository';
 import BackHomeButton from '../components/BackHomeButton';
+import useSession from '@/utils/supabase/use-session';
 
 
 export default function SearchPage() {
   const supabase = createSupabaseBrowserClient();
+
+  const user = useSession()?.user
 
   // Initialize repositories
   const typesRepo = new TypesRepository(supabase);
