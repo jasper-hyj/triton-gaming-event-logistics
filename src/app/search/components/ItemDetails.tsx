@@ -73,21 +73,21 @@ export default function ItemDetails({
         <FieldDropdown
           label="Type"
           value={editedItem.type ?? ""}
-          options={allTypes.map((t) => t.id)}
+          options={allTypes}
           onChange={(v) => onChangeField("type", v)}
           readOnly={!editMode}
         />
         <FieldDropdown
           label="Condition"
           value={editedItem.condition ?? ""}
-          options={allConditions.map((t) => t.id)}
+          options={allConditions}
           onChange={(v) => onChangeField("condition", v)}
           readOnly={!editMode}
         />
         <FieldDropdown
           label="Source"
           value={editedItem.source ?? ''}
-          options={allSources.map((t) => t.id)}
+          options={allSources}
           onChange={(v) => onChangeField('source', v)}
           readOnly={!editMode}
         />

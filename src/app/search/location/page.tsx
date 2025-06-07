@@ -18,7 +18,6 @@ export default function LocationSearchPage() {
 
   const [query, setQuery] = useState<string>("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [location, setLocation] = useState<Location | null>(null);
 
 
@@ -35,38 +34,26 @@ export default function LocationSearchPage() {
     fetchLocations();
   }, [supabase]);
 
-
-  const handleSearch = async () => {
-    const locationId = query.trim();
+  const handleSearch = async (queryValue: string) => {
+    const locationId = queryValue.trim();
     if (!locationId) return;
     setLoading(true);
-    try {
-      const { data, error } = await locationsRepo.getById(locationId);
-      if (error || !data) {
-        setError('Item not found.');
-      } else {
-        setLocation(data);
-      }
-    } catch (e) {
-      setError('Error fetching item.');
-    } finally {
-      setLoading(false);
-    }
+    const { data, error } = await locationsRepo.getById(locationId);
+    setLocation(data);
+    setLoading(false);
   };
 
   return (
     <main className="min-h-screen bg-white px-4 sm:px-6 py-12 max-w-5xl mx-auto">
       <BackHomeButton />
-
-      <div className="text-center space-y-8">
+      <div className="space-y-8">
         <LocationSearchBar
           query={query}
-          setQuery={setQuery}
           loading={loading}
+          setQuery={setQuery}
           handleSearch={handleSearch}
           allLocations={allLocations}
         />
-
         {location && (
           <>
             <LocationDetails
