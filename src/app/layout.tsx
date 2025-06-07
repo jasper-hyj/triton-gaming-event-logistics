@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 Look for anything you need.
               </p>
             </div>
-            {!user ? <Link href="/login" className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">Login</Link>
+            {!user ? <Link href="/login" className="px-6 py-2 bg-cyan-800 text-white rounded-md hover:bg-cyan-700 transition">Login</Link>
               : <Link href="/account" className="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">Account</Link>}
           </header>
 

@@ -24,10 +24,7 @@ export default function LocationSearchBar({
             <select
                     value={query}
                     disabled={loading}
-                    onChange={(e) => {
-                        setQuery(e.target.value);
-                        handleSearch()
-                    }}
+                    onChange={(e) => setQuery(e.target.value)}
                     className="w-full max-w-lg px-5 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none transition"
                 >
                     <option value="" disabled >-- Select Location --</option>
