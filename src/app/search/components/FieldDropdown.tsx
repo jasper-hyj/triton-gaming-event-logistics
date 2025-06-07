@@ -3,7 +3,7 @@ import React from "react";
 type FieldDropdownProps = {
     label: string;
     value: string;
-    options: string[]; // or { label: string; value: string }[] if you want more control
+    options: { id: string }[];
     onChange: (value: string) => void;
     readOnly?: boolean;
 };
@@ -29,11 +29,12 @@ export default function FieldDropdown({
                 >
                     <option value="" disabled >-- Select {label} --</option>
                     {options.map((opt) => (
-                        <option key={opt} value={opt}>
-                            {opt}
+                        <option key={opt.id} value={opt.id}>
+                            {opt.id}
                         </option>
                     ))}
-                </select>)}
+                </select>
+            )}
         </div>
     );
 }
