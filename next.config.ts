@@ -1,6 +1,8 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {
-  reactStrictMode: true,
-};
 
-module.exports = nextConfig;
+module.exports = {
+  reactStrictMode: true,
+  images: {
+    remotePatterns: [new URL("https://lh3.googleusercontent.com/**")],
+  },
+};

@@ -16,11 +16,11 @@ export async function createSupabaseServerClient(component: boolean = false) {
         setAll(cookiesToSet) {
           if (component) return;
           cookiesToSet.forEach(({ name, value, options }) =>
-            cookieStore.set(name, value, options)
+            cookieStore.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 }
 
@@ -30,7 +30,7 @@ export function createSupabaseServerComponentClient() {
 
 export function createSupabaseReqResClient(
   req: NextRequest,
-  res: NextResponse
+  res: NextResponse,
 ) {
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -42,10 +42,10 @@ export function createSupabaseReqResClient(
         },
         setAll(cookiesToSet) {
           cookiesToSet.forEach(({ name, value, options }) =>
-            res.cookies.set(name, value, options)
+            res.cookies.set(name, value, options),
           );
         },
       },
-    }
+    },
   );
 }

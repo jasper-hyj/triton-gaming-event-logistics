@@ -1,61 +1,57 @@
-'use client'
+"use client";
 
-import { useEffect, useState } from 'react'
-import Script from 'next/script'
-import { useRouter } from 'next/navigation'
-import { createSupabaseBrowserClient } from '@/utils/supabase/client'
-import { CredentialResponse } from 'google-one-tap'
+import { useCallback, useEffect, useState } from "react";
+import Script from "next/script";
+import { useRouter } from "next/navigation";
+import { createSupabaseBrowserClient } from "@/utils/supabase/client";
+import { CredentialResponse } from "google-one-tap";
 
 const GoogleAuthButton = () => {
+  const [scriptLoaded, setScriptLoaded] = useState(false);
+  const supabase = createSupabaseBrowserClient();
+  const router = useRouter();
 
-  const [scriptLoaded, setScriptLoaded] = useState(false)
-
-  const supabase = createSupabaseBrowserClient()
-  const router = useRouter()
-
-  const handleCredential = async (credential: string) => {
-    try {
+  const handleCredential = useCallback(
+    async (credential: string) => {
       const { error } = await supabase.auth.signInWithIdToken({
-        provider: 'google',
+        provider: "google",
         token: credential,
-      })
-      if (error) throw error
-      router.refresh()
-    } catch (err) {
-      console.error('Google Button Auth error:', err)
-    }
-  }
+      });
+      if (error) return;
+      router.refresh();
+    },
+    [supabase, router],
+  );
 
-  const initialize = () => {
+  const initialize = useCallback(() => {
     window.google.accounts.id.initialize({
       client_id: process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID!,
       callback: (res: CredentialResponse) => {
-        if (res.credential) handleCredential(res.credential)
+        if (res.credential) handleCredential(res.credential);
       },
-    })
-  }
+    });
+  }, [handleCredential]);
 
-  const renderButton = () => {
-    console.log("renderButton")
-    const buttonDiv = document.getElementById('google-signin-button')
+  const renderButton = useCallback(() => {
+    const buttonDiv = document.getElementById("google-signin-button");
+    if (!buttonDiv) return;
 
-    window.google.accounts.id.renderButton(buttonDiv!, {
-      type: 'standard',
-      theme: 'outline',
-      size: 'large',
-      text: 'signin_with',
-      shape: 'pill',
-      logo_alignment: 'left',
+    window.google.accounts.id.renderButton(buttonDiv, {
+      type: "standard",
+      theme: "outline",
+      size: "large",
+      text: "signin_with",
+      shape: "pill",
+      logo_alignment: "left",
       width: 350,
-    })
-  }
+    });
+  }, []);
 
   useEffect(() => {
-    if (!window.google?.accounts?.id) return
-    initialize()
-    renderButton()
-
-  }, [scriptLoaded])
+    if (!window.google?.accounts?.id) return;
+    initialize();
+    renderButton();
+  }, [scriptLoaded, initialize, renderButton]);
 
   return (
     <>
@@ -68,7 +64,7 @@ const GoogleAuthButton = () => {
         <div id="google-signin-button" />
       </div>
     </>
-  )
-}
+  );
+};
 
-export default GoogleAuthButton
+export default GoogleAuthButton;

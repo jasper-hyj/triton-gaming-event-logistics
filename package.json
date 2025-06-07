@@ -6,7 +6,10 @@
     "dev": "next dev --turbopack -p 80",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "eslint-check-only": "npx eslint",
+    "eslint-fix": "npx eslint --fix",
+    "prettier": "npx prettier --write ."
   },
   "dependencies": {
     "@supabase/ssr": "^0.6.1",
@@ -32,7 +35,10 @@
     "autoprefixer": "^10.4.21",
     "eslint": "^9.28.0",
     "eslint-config-next": "15.3.3",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-prettier": "^5.4.1",
     "postcss": "^8.5.4",
+    "prettier": "^3.5.3",
     "tailwindcss": "^4.1.8",
     "tsx": "^4.19.4",
     "typescript": "5.4.5"
