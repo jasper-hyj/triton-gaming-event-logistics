@@ -5,8 +5,7 @@ import Image from 'next/image';
 import TGLogo from '@/img/TG Color Logo.png';
 import { createSupabaseServerComponentClient } from '@/utils/supabase/server';
 import Link from 'next/link';
-import GoogleAuth from './auth/GoogleAuth';
-import OneTapPrompt from './auth/OneTapComponent';
+import GoogleAuthOneTap from './auth/google/GoogleAuthOneTap';
 
 const nunito = Nunito({ subsets: ['latin'], weight: ['400', '600', '700'] });
 
@@ -16,6 +15,7 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  
   const {
     data: { user },
     error,
@@ -49,15 +49,15 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               : <Link href="/account" className="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">Account</Link>}
           </header>
 
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow">
+            {children}
+          </main>
 
           <footer className="mt-16 text-center text-sm text-gray-400">
             &copy; 2025 Triton Gaming — Event Logistics Team
           </footer>
-          
         </div>
-        {/* <GoogleAuth /> */}
-        <OneTapPrompt />
+        {!user && <GoogleAuthOneTap />}
       </body>
     </html>
   );

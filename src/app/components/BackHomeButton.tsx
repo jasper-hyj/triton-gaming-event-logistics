@@ -1,4 +1,3 @@
-import { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 import Link from "next/link"
 
 export default function BackHomeButton(

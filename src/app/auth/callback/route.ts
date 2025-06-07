@@ -10,7 +10,7 @@ export async function GET(request: Request) {
   const next = searchParams.get("next") ?? "/";
 
   if (code) {
-    const supabase = await createSupabaseServerClient();
+    const supabase = await createSupabaseServerClient(); // Ensure this correctly gets a server client
 
     const { error } = await supabase.auth.exchangeCodeForSession(code);
 
@@ -18,5 +18,6 @@ export async function GET(request: Request) {
       return NextResponse.redirect(`${origin}${next}`);
     }
   }
+  // If no code or error in exchange, redirect to an error page
   return NextResponse.redirect(`${origin}/auth/auth-error`);
 }

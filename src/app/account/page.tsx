@@ -29,7 +29,8 @@ export default function Account() {
     setLoadingLogout(true)
     try {
       await supabase.auth.signOut()
-      router.push('/')
+      router.replace("/")
+      window.location.reload()
     } catch (error) {
       console.error('Logout error:', error)
       setLoadingLogout(false)

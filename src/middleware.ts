@@ -14,7 +14,7 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // protects the "/account" route and its sub-routes
+  // Protect only /account and subpaths
   if (!user && request.nextUrl.pathname.startsWith("/account")) {
     return NextResponse.redirect(new URL("/", request.url));
   }
@@ -22,6 +22,7 @@ export async function middleware(request: NextRequest) {
   return response;
 }
 
+// Run middleware only on /account and subroutes (not on /)
 export const config = {
-  matcher: ["/", "/account/:path*"],
+  matcher: ["/account/:path*"],
 };
