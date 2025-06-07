@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation';
 import BackHomeButton from '../components/BackHomeButton'
 import { createSupabaseServerComponentClient } from '@/utils/supabase/server';
-import GoogleAuthButton from '../auth/google/GoogleAuthButton';
+import GoogleAuthButton from './google/GoogleAuthButton';
 export default async function LoginPage() {
   
   const {

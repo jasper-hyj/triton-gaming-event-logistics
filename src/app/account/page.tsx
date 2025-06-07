@@ -1,78 +1,88 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createSupabaseBrowserClient } from '@/utils/supabase/client'
 import useSession from '@/utils/supabase/use-session'
 
 export default function Account() {
-  const user = useSession()?.user
-  const supabase = createSupabaseBrowserClient()
   const router = useRouter()
-  const [loadingLogout, setLoadingLogout] = useState(false)
-  const [sessionLoading, setSessionLoading] = useState(true)
+  const supabase = createSupabaseBrowserClient()
+  const user = useSession()?.user
 
-  // Wait for session to load before redirecting
+  const [loading, setLoading] = useState(true)
+  const [loggingOut, setLoggingOut] = useState(false)
+
   useEffect(() => {
-    if (user === undefined) {
-      // Session is still loading
-      setSessionLoading(true)
-    } else {
-      setSessionLoading(false)
-      if (!user) {
-        router.replace('/')
-      }
-    }
+    if (user === undefined) return
+    setLoading(false)
+    if (!user) router.replace('/')
   }, [user, router])
 
   const handleLogout = async () => {
-    setLoadingLogout(true)
+    setLoggingOut(true)
     try {
       await supabase.auth.signOut()
-      router.replace("/")
+      router.replace('/')
       window.location.reload()
-    } catch (error) {
-      console.error('Logout error:', error)
-      setLoadingLogout(false)
+    } catch (err) {
+      console.error('Logout error:', err)
+      setLoggingOut(false)
     }
   }
 
-  if (sessionLoading) {
-    return <p className="text-center mt-20 text-gray-500">Loading user info...</p>
-  }
+  if (loading)
+    return (
+      <p className="text-center mt-24 text-gray-500 text-lg font-light tracking-wide">
+        Loading user info...
+      </p>
+    )
 
-  if (!user) {
-    // Redirecting, but this shouldn't flash because of above
-    return <p className="text-center mt-20 text-gray-500">Redirecting...</p>
-  }
+  if (!user)
+    return (
+      <p className="text-center mt-24 text-gray-500 text-lg font-light tracking-wide">
+        Redirecting...
+      </p>
+    )
 
   return (
-    <main className="bg-white px-6 py-12 max-w-xl mx-auto flex flex-col items-center justify-center text-center">
-      <h1 className="text-3xl font-semibold text-gray-900 mb-6">User Information</h1>
+    <main className="bg-white px-8 py-16 max-w-lg mx-auto rounded-lg shadow-lg flex flex-col items-center text-center">
+      <h1 className="text-4xl font-extrabold text-gray-900 mb-10 tracking-tight">
+        User Information
+      </h1>
 
-      <div className="bg-gray-100 p-6 rounded-lg shadow w-full">
-        <p className="text-lg text-gray-800 mb-2">
-          <strong>Name:</strong> {user.user_metadata?.full_name || 'N/A'}
+      <div className="bg-gray-50 p-8 rounded-xl shadow-md w-full border border-gray-200 text-left">
+        <p className="text-xl text-gray-700 mb-4">
+          <span className="font-semibold">Name:</span>{' '}
+          {user.user_metadata?.full_name || 'N/A'}
         </p>
-        <p className="text-lg text-gray-800">
-          <strong>Email:</strong> {user.email}
+        <p className="text-xl text-gray-700">
+          <span className="font-semibold">Email:</span> {user.email}
         </p>
       </div>
 
-      <button
-        onClick={() => router.back()}
-        className="mt-8 px-6 py-2 rounded-md bg-zinc-600 hover:bg-zinc-700 text-white font-medium transition"
-      >
-        Go Back
-      </button>
+      <div className="mt-12 flex flex-col gap-4 w-full max-w-xs">
+        <button
+          onClick={() => router.back()}
+          className="w-full px-6 py-3 rounded-md bg-zinc-700 hover:bg-zinc-800 text-white font-semibold transition-shadow shadow-md hover:shadow-lg"
+          aria-label="Go back"
+        >
+          Go Back
+        </button>
 
-      <button
-        onClick={handleLogout}
-        disabled={loadingLogout}
-        className="mt-4 px-6 py-2 rounded-md bg-red-600 hover:bg-red-700 text-white font-medium transition disabled:opacity-50"
-      >
-        {loadingLogout ? 'Logging out...' : 'Logout'}
-      </button>
+        <button
+          onClick={handleLogout}
+          disabled={loggingOut}
+          className={`w-full px-6 py-3 rounded-md text-white font-semibold transition-shadow shadow-md ${
+            loggingOut
+              ? 'bg-red-400 cursor-not-allowed'
+              : 'bg-red-600 hover:bg-red-700 hover:shadow-lg'
+          }`}
+          aria-label="Logout"
+        >
+          {loggingOut ? 'Logging out...' : 'Logout'}
+        </button>
+      </div>
     </main>
   )
 }
