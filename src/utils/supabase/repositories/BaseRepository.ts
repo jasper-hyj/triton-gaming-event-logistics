@@ -1,4 +1,4 @@
-import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
+import { SupabaseClient } from "@supabase/supabase-js";
 
 export default class BaseRepository<T extends { id: string }> {
   protected supabase: SupabaseClient;

@@ -1,7 +1,8 @@
-import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
+
 import { Part } from './PartsRepository';
 import { Port } from './PortsRepository';
 import { Installation } from './InstallationsRepository';
+import { SupabaseClient } from '@supabase/supabase-js';
 
 
 export type Item = {

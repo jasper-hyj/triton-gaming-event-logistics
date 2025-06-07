@@ -1,14 +1,12 @@
-// src/app/api/todos/route.ts
 import { cookies } from 'next/headers';
-import { createClient } from '@/utils/supabase/server';
 import ItemsRepository from '@/utils/supabase/repositories/ItemsRepository';
 import { NextRequest } from 'next/server';
+import { createSupabaseServerClient } from '@/utils/supabase/server';
 
 
 
 export async function GET(_req: NextRequest) {
-    const cookieStore = await cookies();
-    const supabase = createClient(cookieStore);
+    const supabase = await createSupabaseServerClient();
 
     const itemsRepo = new ItemsRepository(supabase);
     const { data, error } = await itemsRepo.getAll();

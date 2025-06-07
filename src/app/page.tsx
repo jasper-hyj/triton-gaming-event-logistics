@@ -1,4 +1,3 @@
-// app/page.tsx
 'use client';
 
 import Link from 'next/link';
@@ -15,6 +14,12 @@ export default function HomePage() {
         className="px-5 py-3 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition duration-200 text-sm sm:text-base"
       >
         🔍 Search for Items
+      </Link>
+      <Link
+        href="/search/location"
+        className="px-5 py-3 bg-gray-500 text-white rounded-lg hover:bg-gray-700 transition duration-200 text-sm sm:text-base"
+      >
+        📍 Search for Locations
       </Link>
 
       <div className="w-full max-w-md border-t border-gray-200 pt-6">

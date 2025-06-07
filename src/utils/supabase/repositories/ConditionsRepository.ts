@@ -1,6 +1,5 @@
-// repositories/InstallationsRepository.ts
+import { SupabaseClient } from '@supabase/supabase-js';
 import BaseRepository from './BaseRepository';
-import { SupabaseClient } from '@supabase/auth-helpers-nextjs';
 
 export type Condition = {
   id: string;

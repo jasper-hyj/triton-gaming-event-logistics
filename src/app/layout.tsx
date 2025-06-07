@@ -1,19 +1,26 @@
-// app/layout.tsx
-
 import '../styles/globals.css';
 import type { Metadata } from 'next';
 import { Nunito } from 'next/font/google';
 import Image from 'next/image';
 import TGLogo from '@/img/TG Color Logo.png';
+import { createSupabaseServerComponentClient } from '@/utils/supabase/server';
+import Link from 'next/link';
+import GoogleAuthOneTap from './auth/google/GoogleAuthOneTap';
 
 const nunito = Nunito({ subsets: ['latin'], weight: ['400', '600', '700'] });
 
 export const metadata: Metadata = {
-  title: 'Triton Gaming Inventory',
+  title: 'Triton Gaming ELO',
   description: 'A gentle way to manage your gaming gear',
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  
+  const {
+    data: { user },
+    error,
+  } = await (await createSupabaseServerComponentClient()).auth.getUser();
+
   return (
     <html lang="en" className="scroll-smooth bg-white text-gray-800">
       <body className={`${nunito.className} min-h-screen flex flex-col antialiased`}>
@@ -32,20 +39,25 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
 
             <div className="text-center sm:text-left">
               <h1 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-900 tracking-tight">
-                Triton Gaming Inventory
+                Triton Gaming ELO
               </h1>
               <p className="text-gray-500 text-sm sm:text-base mt-1">
                 Look for anything you need.
               </p>
             </div>
+            {!user ? <Link href="/login" className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition">Login</Link>
+              : <Link href="/account" className="px-6 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 transition">Account</Link>}
           </header>
 
-          <main className="flex-grow">{children}</main>
+          <main className="flex-grow">
+            {children}
+          </main>
 
           <footer className="mt-16 text-center text-sm text-gray-400">
             &copy; 2025 Triton Gaming — Event Logistics Team
           </footer>
         </div>
+        {!user && <GoogleAuthOneTap />}
       </body>
     </html>
   );

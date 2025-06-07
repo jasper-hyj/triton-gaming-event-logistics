@@ -1,6 +1,5 @@
 'use client';
-import { useRouter } from 'next/navigation';
-import { createClient } from '@/utils/supabase/client';
+import { createSupabaseBrowserClient } from '@/utils/supabase/client';
 import ItemsRepository, { Item } from '@/utils/supabase/repositories/ItemsRepository';
 import PartsRepository, { Part } from '@/utils/supabase/repositories/PartsRepository';
 import { useState, useEffect } from 'react';
@@ -11,11 +10,14 @@ import InstallationsRepository, { Installation } from '@/utils/supabase/reposito
 import TypesRepository, { Type } from '@/utils/supabase/repositories/TypesRepository';
 import ConditionsRepository, { Condition } from '@/utils/supabase/repositories/ConditionsRepository';
 import SourcesRepository, { Source } from '@/utils/supabase/repositories/SourcesRepository';
+import BackHomeButton from '../components/BackHomeButton';
+import useSession from '@/utils/supabase/use-session';
 
 
 export default function SearchPage() {
-  const router = useRouter();
-  const supabase = createClient();
+  const supabase = createSupabaseBrowserClient();
+
+  const user = useSession()?.user
 
   // Initialize repositories
   const typesRepo = new TypesRepository(supabase);
@@ -208,25 +210,7 @@ export default function SearchPage() {
 
   return (
     <main className="min-h-screen bg-white px-4 sm:px-6 py-12 max-w-5xl mx-auto">
-      <button
-        onClick={() => router.push('/')}
-        className="mb-8 inline-flex items-center text-gray-600 hover:text-blue-600 transition"
-        aria-label="Back to home"
-      >
-        <svg
-          className="w-5 h-5 mr-1 stroke-current"
-          fill="none"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-          aria-hidden="true"
-        >
-          <path d="M15 18l-6-6 6-6"></path>
-        </svg>
-        Home
-      </button>
+      <BackHomeButton />
 
       <div className="text-center space-y-8">
 
