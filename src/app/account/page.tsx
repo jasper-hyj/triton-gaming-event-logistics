@@ -3,12 +3,12 @@
 import { useRouter } from "next/navigation";
 import LogoutButton from "../login/LogoutButton";
 import BackHomeButton from "../components/BackHomeButton";
-import { useAppUser } from "../login/UserContext";
+import { useUser } from "../login/UserContext";
 import { useEffect } from "react";
 
 export default function Account() {
   const router = useRouter();
-  const { user, loading } = useAppUser();
+  const { user, loading } = useUser();
 
   useEffect(() => {
     if (!user) router.replace("/");
@@ -48,6 +48,12 @@ export default function Account() {
         </p>
         <p className="text-xl text-gray-700 mb-4">
           <span className="font-semibold">Role:</span> {user.role}
+        </p>
+        <p className="text-xl text-gray-700 mb-4">
+          <span className="font-semibold">Role Level:</span> {user.roleLevel}
+        </p>
+        <p className="text-xl text-gray-700 mb-4">
+          <span className="font-semibold">Discord Id:</span> {user.discordId}
         </p>
       </div>
 

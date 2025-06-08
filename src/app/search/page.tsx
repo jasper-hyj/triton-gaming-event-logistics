@@ -10,9 +10,12 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import ItemDetails from "./components/ItemDetails";
 import ItemSearchBar from "./components/ItemSearchBar";
+import { ROLE_LEVELS } from "@/lib/auth/Role";
+import { useUser } from "../login/UserContext";
 
 export default function SearchPage() {
   const router = useRouter();
+  const { user } = useUser();
 
   // Initialize repositories
   const typesRepo = new TypesRepository();
@@ -231,7 +234,7 @@ export default function SearchPage() {
           handleSearch={handleSearch}
         />
         {loading && <p className="text-blue-500 font-medium">Loading...</p>}
-        {error === "Item not found." ? (
+        {error === "Item not found." && user && user.roleLevel >= ROLE_LEVELS.tg_elo ? (
           <div className="text-center">
             <p className="text-red-500 font-medium mb-2">{error}</p>
             <button
@@ -250,16 +253,18 @@ export default function SearchPage() {
           <>
             <div className="flex justify-between items-center mt-6">
               <h2 className="text-3xl font-semibold text-gray-800 pl-1">{item.id}</h2>
-              <button
-                onClick={() => {
-                  if (editMode) handleSave();
-                  else setEditMode(true);
-                }}
-                disabled={loading}
-                className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold"
-              >
-                {editMode ? (loading ? "Saving..." : "Save Changes") : "Edit Item"}
-              </button>
+              {user && user.roleLevel >= ROLE_LEVELS.tg_officer && (
+                <button
+                  onClick={() => {
+                    if (editMode) handleSave();
+                    else setEditMode(true);
+                  }}
+                  disabled={loading}
+                  className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg font-semibold"
+                >
+                  {editMode ? (loading ? "Saving..." : "Save Changes") : "Edit Item"}
+                </button>
+              )}
             </div>
 
             <ItemDetails

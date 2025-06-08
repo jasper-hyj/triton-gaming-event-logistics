@@ -7,6 +7,7 @@ export type SerializedUser = {
   name: string;
   role: Role;
   roleLevel: number;
+  discordId: string;
   authUser: types.User;
   profile: Profile;
 };
@@ -16,6 +17,7 @@ export type Profile = {
   name: string;
   role: Role;
   role_level: number | null;
+  discord_id: string;
 };
 
 export class User {
@@ -24,6 +26,7 @@ export class User {
   name: string;
   role: Role;
   roleLevel: number;
+  discordId: string;
   authUser: types.User;
   profile: Profile;
 
@@ -34,6 +37,7 @@ export class User {
     this.name = raw.name;
     this.role = raw.role as Role;
     this.roleLevel = raw.roleLevel ?? 0;
+    this.discordId = raw.discordId;
 
     this.authUser = raw.authUser;
     this.profile = raw.profile;
@@ -41,13 +45,14 @@ export class User {
 
   static from(authUser: types.User, profile: Profile): User {
     const role = profile.role ?? "authenticated";
-    const roleLevel = profile.role_level ?? ROLE_LEVELS[role] ?? 0;
+    const roleLevel = profile.role_level ?? 0;
     return new User({
       id: authUser.id,
       email: authUser.email ?? null,
       name: profile.name,
       role: role,
       roleLevel: roleLevel,
+      discordId: profile.discord_id,
       authUser,
       profile,
     });
@@ -55,18 +60,6 @@ export class User {
 
   hasMinimumRole(required: HierarchicalRole): boolean {
     return isHierarchical(this.role) && ROLE_LEVELS[this.role] >= ROLE_LEVELS[required];
-  }
-
-  toJSON(): SerializedUser {
-    return {
-      id: this.id,
-      email: this.email,
-      name: this.name,
-      role: this.role,
-      roleLevel: this.roleLevel,
-      authUser: this.authUser,
-      profile: this.profile,
-    };
   }
 
   is(role: Role): boolean {
