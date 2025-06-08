@@ -15,11 +15,7 @@ export default class BaseRepository<T extends { id: string }> {
   }
 
   async getById(id: string): Promise<{ data: T | null; error: Error | null }> {
-    return await this.supabase
-      .from(this.table)
-      .select("*")
-      .eq("id", id)
-      .single();
+    return await this.supabase.from(this.table).select("*").eq("id", id).single();
   }
 
   async insert(item: Omit<T, "id">) {
@@ -27,20 +23,10 @@ export default class BaseRepository<T extends { id: string }> {
   }
 
   async update(id: string, updates: Partial<T>) {
-    return await this.supabase
-      .from(this.table)
-      .update(updates)
-      .eq("id", id)
-      .select()
-      .single();
+    return await this.supabase.from(this.table).update(updates).eq("id", id).select().single();
   }
 
   async delete(id: string) {
-    return await this.supabase
-      .from(this.table)
-      .delete()
-      .eq("id", id)
-      .select()
-      .single();
+    return await this.supabase.from(this.table).delete().eq("id", id).select().single();
   }
 }

@@ -36,55 +36,26 @@ export default class ItemsRepository {
     return await this.supabase.from("view_items").select("*");
   }
 
-  async getById(
-    id: string,
-  ): Promise<{ data: Item | null; error: Error | null }> {
-    return await this.supabase
-      .from("view_items")
-      .select("*")
-      .eq("id", id)
-      .single();
+  async getById(id: string): Promise<{ data: Item | null; error: Error | null }> {
+    return await this.supabase.from("view_items").select("*").eq("id", id).single();
   }
 
   // ----- Items -----
 
-  async insert(
-    item: Omit<
-      Item,
-      "created_at" | "ports" | "parts" | "missings" | "installations"
-    >,
-  ) {
+  async insert(item: Omit<Item, "created_at" | "ports" | "parts" | "missings" | "installations">) {
     return await this.supabase.from("items").insert(item).select().single();
   }
 
-  async update(
-    id: string,
-    updates: Partial<Omit<Item, "ports" | "parts" | "missings">>,
-  ) {
-    return await this.supabase
-      .from("items")
-      .update(updates)
-      .eq("id", id)
-      .select()
-      .single();
+  async update(id: string, updates: Partial<Omit<Item, "ports" | "parts" | "missings">>) {
+    return await this.supabase.from("items").update(updates).eq("id", id).select().single();
   }
 
   async delete(id: string) {
-    return await this.supabase
-      .from("items")
-      .delete()
-      .eq("id", id)
-      .select()
-      .single();
+    return await this.supabase.from("items").delete().eq("id", id).select().single();
   }
 
   // ----- Generic linking helpers -----
-  private linkMany(
-    table: string,
-    itemId: string,
-    key: string,
-    ids: Set<string>,
-  ) {
+  private linkMany(table: string, itemId: string, key: string, ids: Set<string>) {
     const inserts = Array.from(ids).map((val) => ({
       item_id: itemId,
       [key]: val,
@@ -139,15 +110,7 @@ export default class ItemsRepository {
     return this.unlinkAll("item_installations", itemId);
   }
 
-  async linkItemToAllInstallation(
-    itemId: string,
-    installationIds: Set<string>,
-  ) {
-    return this.linkMany(
-      "item_installations",
-      itemId,
-      "installation",
-      installationIds,
-    );
+  async linkItemToAllInstallation(itemId: string, installationIds: Set<string>) {
+    return this.linkMany("item_installations", itemId, "installation", installationIds);
   }
 }

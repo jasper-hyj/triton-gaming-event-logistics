@@ -1,8 +1,6 @@
 "use client";
 import BackHomeButton from "@/app/components/BackHomeButton";
-import LocationsRepository, {
-  Location,
-} from "@/lib/repositories/LocationsRepository";
+import LocationsRepository, { Location } from "@/lib/repositories/LocationsRepository";
 import { useState } from "react";
 import LocationDetails from "./components/LocationDetails";
 import LocationSearchBar from "./components/LocationSearchBar";
@@ -21,8 +19,7 @@ export default function LocationSearchPage() {
   // Load all ports and parts on mount for select options
   const fetchLocations = async () => {
     const locationsResult = await locationsRepo.getAll();
-    if (!locationsResult.error && locationsResult.data)
-      setAllLocations(locationsResult.data);
+    if (!locationsResult.error && locationsResult.data) setAllLocations(locationsResult.data);
   };
   fetchLocations();
 

@@ -17,9 +17,7 @@ export default function ItemSearchBar({
 }: ItemSearchBarProps) {
   return (
     <>
-      <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">
-        Search for an Item
-      </h1>
+      <h1 className="text-3xl sm:text-4xl font-bold text-gray-800">Search for an Item</h1>
 
       <div className="flex flex-col sm:flex-row gap-3 items-center justify-center">
         <input

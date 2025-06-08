@@ -24,9 +24,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
     try {
       const res = await fetch(`${API_BASE}/${encodeURIComponent(itemId)}`);
       if (!res.ok) {
-        await interaction.editReply(
-          `Error fetching item: ${res.status} ${res.statusText}`,
-        );
+        await interaction.editReply(`Error fetching item: ${res.status} ${res.statusText}`);
         return;
       }
       const json = await res.json();
@@ -48,9 +46,7 @@ client.on(Events.InteractionCreate, async (interaction) => {
       const embed = new EmbedBuilder()
         .setColor(0x00b0f4)
         .setTitle(`🎮 Item: ${item.name || "Unnamed Item"}`)
-        .setDescription(
-          `📄 *${item.description || "No description provided."}*`,
-        )
+        .setDescription(`📄 *${item.description || "No description provided."}*`)
         .addFields(
           // ─────── Basic Info ───────
           { name: "🆔 ID", value: `\`${item.id}\``, inline: true },
