@@ -63,10 +63,7 @@ export default function ItemSearchBar({
       </div>
 
       {scannerVisible && (
-        <div className="mt-4">
-          {/* Pass scannedText and setScannedText as props */}
-          <QRCodeScanner scannedText={scannedText} setScannedText={setScannedText} />
-        </div>
+        <QRCodeScanner setScannedText={setScannedText} onCancel={() => setScannerVisible(false)} />
       )}
     </>
   );
