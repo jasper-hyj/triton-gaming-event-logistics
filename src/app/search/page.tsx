@@ -28,6 +28,7 @@ export default function SearchPage() {
 
   const [query, setQuery] = useState("");
   const [item, setItem] = useState<Item | null>(null);
+
   const [editedItem, setEditedItem] = useState<Partial<Omit<Item, "ports" | "parts" | "missings">>>(
     {},
   );
@@ -68,8 +69,8 @@ export default function SearchPage() {
     fetchPortsAndParts();
   });
 
-  const handleSearch = async () => {
-    const itemId = query.trim().replaceAll(" ", "").toUpperCase();
+  const handleSearch = async (queryValue: string) => {
+    const itemId = queryValue.trim().replaceAll(" ", "").toUpperCase();
     if (!itemId) return;
     setLoading(true);
     setError(null);
