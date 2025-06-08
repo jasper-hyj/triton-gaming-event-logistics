@@ -1,5 +1,7 @@
 "use client";
 
+import Image from "next/image";
+import qrcodeSVG from "@/img/qrcode-solid.svg";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -21,8 +23,15 @@ export default function HomePage() {
       </Link>
 
       <div className="w-full max-w-md border-t border-gray-200 pt-6">
-        <p className="text-gray-400 text-sm">Future functions will appear here...</p>
+        <p className="text-gray-400 text-sm">Small Tools</p>
       </div>
+      <Link
+        href="/qrcode"
+        className="flex flex-col sm:flex-row items-center justify-center px-5 py-3 bg-sky-500 text-white rounded-lg hover:bg-sky-700 transition duration-200 text-sm sm:text-base flex"
+      >
+        <Image src={qrcodeSVG} alt={""} height={24} className="me-2" />
+        QRCode Generator
+      </Link>
     </main>
   );
 }

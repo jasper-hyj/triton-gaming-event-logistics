@@ -8,17 +8,18 @@ import logo from "@/img/TG Color Logo.png"; // or use public URL string
 
 type Props = {
   url: string;
+  size: number;
 };
 
-const QRCodeStyled = ({ url }: Props) => {
+const QRCodeStyled = ({ url, size }: Props) => {
   const qrRef = useRef<HTMLDivElement>(null);
   const qrCodeRef = useRef<QRCodeStyling | null>(null);
 
   useEffect(() => {
     if (!qrCodeRef.current) {
       qrCodeRef.current = new QRCodeStyling({
-        width: 200,
-        height: 200,
+        width: size,
+        height: size,
         type: "canvas",
         data: url,
         image: logo.src,
@@ -68,7 +69,7 @@ const QRCodeStyled = ({ url }: Props) => {
       qrCodeRef.current?.update({ data: url });
       qrCodeRef.current?.append(qrRef.current);
     }
-  }, [url]);
+  }, [url, size]);
 
   const handleDownload = async () => {
     if (!qrCodeRef.current || !url) return;
