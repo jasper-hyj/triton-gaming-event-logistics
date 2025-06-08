@@ -1,11 +1,10 @@
 import { redirect } from "next/navigation";
 import BackHomeButton from "../components/BackHomeButton";
-import { createSupabaseServerComponentClient } from "@/utils/supabase/server";
 import GoogleAuthButton from "./google/GoogleAuthButton";
+import { fetchUserServer } from "@/lib/auth/fetchUserServer";
+
 export default async function LoginPage() {
-  const {
-    data: { user },
-  } = await (await createSupabaseServerComponentClient()).auth.getUser();
+  const user = await fetchUserServer();
   if (user) {
     redirect("/");
   }

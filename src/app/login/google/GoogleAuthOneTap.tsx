@@ -4,8 +4,10 @@ import { useEffect, useState, useCallback } from "react";
 import Script from "next/script";
 import { createSupabaseBrowserClient } from "@/utils/supabase/client";
 import { CredentialResponse } from "google-one-tap";
+import { useUser } from "../UserContext";
 
 const GoogleAuthOneTap = () => {
+  const { user } = useUser();
   const [scriptLoaded, setScriptLoaded] = useState(false);
   const supabase = createSupabaseBrowserClient();
 
@@ -46,11 +48,15 @@ const GoogleAuthOneTap = () => {
   }, [scriptLoaded, supabase, handleCredential]);
 
   return (
-    <Script
-      src="https://accounts.google.com/gsi/client"
-      strategy="afterInteractive"
-      onLoad={() => setScriptLoaded(true)}
-    />
+    <>
+      {!user && (
+        <Script
+          src="https://accounts.google.com/gsi/client"
+          strategy="afterInteractive"
+          onLoad={() => setScriptLoaded(true)}
+        />
+      )}
+    </>
   );
 };
 

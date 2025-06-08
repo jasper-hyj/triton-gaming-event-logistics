@@ -19,7 +19,9 @@ const LogoutButton = () => {
       setLoggingOut(false);
       return;
     }
-    setTimeout(() => router.replace("/"), 600);
+    setTimeout(() => {
+      router.replace("/");
+    }, 600);
   };
 
   return (
