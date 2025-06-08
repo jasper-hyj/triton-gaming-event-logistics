@@ -28,6 +28,7 @@ export default function SearchPage() {
 
   const [query, setQuery] = useState("");
   const [item, setItem] = useState<Item | null>(null);
+
   const [editedItem, setEditedItem] = useState<Partial<Omit<Item, "ports" | "parts" | "missings">>>(
     {},
   );

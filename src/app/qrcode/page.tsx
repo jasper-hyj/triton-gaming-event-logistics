@@ -6,6 +6,7 @@ import QRCodeCreator from "./components/QRCodeCreator";
 
 export default function LocationSearchPage() {
   const [url, setUrl] = useState<string>("");
+
   const [generate, setGenerate] = useState<boolean>(false);
   const [qrcodeUrl, setQrcodeUrl] = useState<string>("");
 

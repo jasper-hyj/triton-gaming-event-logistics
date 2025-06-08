@@ -7,5 +7,9 @@
 
 ## Useful References
 
+#### Styling
 - https://tailwindcss.com/
+
+#### QRCode
 - https://www.npmjs.com/package/qr-code-styling
+- https://www.npmjs.com/package/qr-scanner
