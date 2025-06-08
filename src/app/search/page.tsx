@@ -69,8 +69,8 @@ export default function SearchPage() {
     fetchPortsAndParts();
   });
 
-  const handleSearch = async () => {
-    const itemId = query.trim().replaceAll(" ", "").toUpperCase();
+  const handleSearch = async (queryValue: string) => {
+    const itemId = queryValue.trim().replaceAll(" ", "").toUpperCase();
     if (!itemId) return;
     setLoading(true);
     setError(null);

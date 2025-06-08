@@ -117,7 +117,7 @@ export default function ItemDetails({
 
         <formComponent.Text label="Created At" value={new Date(item.created_at).toLocaleString()} />
 
-        <QRCodeStyled url={`${window.location.origin}/api/items/${item.id}`} size={200} />
+        <QRCodeStyled url={`${item.id}`} size={200} />
       </div>
 
       <div className="grid mt-6">

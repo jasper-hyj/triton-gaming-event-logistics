@@ -2,14 +2,14 @@
 
 import Image from "next/image";
 import qrcodeSVG from "@/img/qrcode-solid.svg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import QRCodeScanner from "@/app/components/QRCodeScanner";
 
 type ItemSearchBarProps = {
   query: string;
   setQuery: (id: string) => void;
   loading: boolean;
-  handleSearch: () => Promise<void>;
+  handleSearch: (queryValue: string) => Promise<void>;
 };
 
 export default function ItemSearchBar({
@@ -19,12 +19,17 @@ export default function ItemSearchBar({
   handleSearch,
 }: ItemSearchBarProps) {
   const [scannerVisible, setScannerVisible] = useState(false);
+  const [scannedText, setScannedText] = useState("");
 
-  const handleScanned = async (scanned: string) => {
-    setQuery(scanned);
-    setScannerVisible(false);
-    await handleSearch(); // auto-search
-  };
+  // Whenever scannedText updates, handle it
+  useEffect(() => {
+    if (scannedText) {
+      setQuery(scannedText);
+      setScannerVisible(false);
+      handleSearch(scannedText);
+      setScannedText(""); // reset scanned text after use
+    }
+  }, [scannedText, setQuery, handleSearch]);
 
   return (
     <>
@@ -36,7 +41,7 @@ export default function ItemSearchBar({
           placeholder="Search by item ID..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && handleSearch()}
+          onKeyDown={(e) => e.key === "Enter" && handleSearch(query)}
           disabled={loading}
         />
 
@@ -50,7 +55,7 @@ export default function ItemSearchBar({
 
         <button
           className="px-4 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-700 transition duration-200 text-sm sm:text-base"
-          onClick={handleSearch}
+          onClick={() => handleSearch(query)}
           disabled={loading}
         >
           🔍 Search
@@ -59,7 +64,8 @@ export default function ItemSearchBar({
 
       {scannerVisible && (
         <div className="mt-4">
-          <QRCodeScanner onScan={handleScanned} />
+          {/* Pass scannedText and setScannedText as props */}
+          <QRCodeScanner scannedText={scannedText} setScannedText={setScannedText} />
         </div>
       )}
     </>

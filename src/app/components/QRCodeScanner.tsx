@@ -4,20 +4,20 @@ import { useEffect, useRef } from "react";
 import QrScanner from "qr-scanner";
 
 type QRCodeScannerProps = {
-  onScan: (data: string) => void;
+  scannedText: string;
+  setScannedText: (text: string) => void;
 };
 
-const QRCodeScanner = ({ onScan }: QRCodeScannerProps) => {
+export default function QRCodeScanner({ scannedText, setScannedText }: QRCodeScannerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const scannerRef = useRef<QrScanner | null>(null);
 
   useEffect(() => {
     if (!videoRef.current) return;
 
-    const scanner = new QrScanner(
+    const qrScanner = new QrScanner(
       videoRef.current,
       (result) => {
-        onScan(result.data);
+        setScannedText(result.data);
       },
       {
         highlightScanRegion: true,
@@ -25,15 +25,23 @@ const QRCodeScanner = ({ onScan }: QRCodeScannerProps) => {
       },
     );
 
-    scannerRef.current = scanner;
-    scanner.start();
+    qrScanner.start();
 
     return () => {
-      scanner.stop();
+      qrScanner.stop();
     };
-  }, [onScan]);
+  }, [setScannedText]);
 
-  return <video ref={videoRef} className="w-full max-w-sm border border-gray-400 rounded shadow" />;
-};
+  return (
+    <div className="flex flex-col items-center gap-4">
+      <div className="relative w-full max-w-xs aspect-square rounded-xl overflow-hidden shadow-lg ">
+        <video ref={videoRef} className="w-full h-full object-cover" />
+        <div className="absolute bottom-0 left-0 w-full bg-black/50 text-white text-center text-xs py-1">
+          Point your camera at a QR code
+        </div>
+      </div>
 
-export default QRCodeScanner;
+      <p className="text-green-700 font-semibold">{scannedText}</p>
+    </div>
+  );
+}
