@@ -3,11 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import LogoutButton from "../login/LogoutButton";
-import useUserClient from "@/hooks/useUserClient";
+import BackHomeButton from "../components/BackHomeButton";
+import useSession from "@/utils/supabase/use-session";
 
 export default function Account() {
   const router = useRouter();
-  const { data: user } = useUserClient();
+  const user = useSession()?.user;
 
   const [loading, setLoading] = useState(true);
 
@@ -16,6 +17,7 @@ export default function Account() {
     setLoading(false);
     if (!user) router.replace("/");
   }, [user, router]);
+
   return (
     <>
       {loading ? (
@@ -26,6 +28,8 @@ export default function Account() {
         <>
           {user ? (
             <main className="bg-white px-8 py-16 max-w-lg mx-auto rounded-lg shadow-lg flex flex-col items-center text-center">
+              <BackHomeButton />
+
               <h1 className="text-4xl font-extrabold text-gray-900 mb-10 tracking-tight">
                 User Information
               </h1>
@@ -43,13 +47,6 @@ export default function Account() {
               </div>
 
               <div className="mt-12 flex flex-col gap-4 w-full max-w-xs">
-                <button
-                  onClick={() => router.back()}
-                  className="w-full px-6 py-3 rounded-md bg-zinc-700 hover:bg-zinc-800 text-white font-semibold transition-shadow shadow-md hover:shadow-lg"
-                  aria-label="Go back"
-                >
-                  Go Back
-                </button>
                 <LogoutButton />
               </div>
             </main>

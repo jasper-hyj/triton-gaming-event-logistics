@@ -114,10 +114,7 @@ export default function ItemDetails({
           readOnly={!editMode}
         />
 
-        <formComponent.Text
-          label="Created At"
-          value={new Date(item.created_at).toLocaleString()}
-        />
+        <formComponent.Text label="Created At" value={new Date(item.created_at).toLocaleString()} />
       </div>
 
       <div className="grid mt-6">

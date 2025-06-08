@@ -11,10 +11,7 @@ const commands = [
     .setName("item")
     .setDescription("Fetch item info by ID")
     .addStringOption((option) =>
-      option
-        .setName("itemid")
-        .setDescription("ID of the item")
-        .setRequired(true),
+      option.setName("itemid").setDescription("ID of the item").setRequired(true),
     )
     .toJSON(),
 ];
