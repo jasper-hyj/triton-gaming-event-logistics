@@ -7,7 +7,6 @@ import { Type } from "@/lib/repositories/TypesRepository";
 import { Condition } from "@/lib/repositories/ConditionsRepository";
 import { Source } from "@/lib/repositories/SourcesRepository";
 import FormComponent from "./FormComponent";
-import QRCodeStyled from "@/app/components/QRCodeGenerator";
 
 type ItemDetailsProps = {
   item: Item;
@@ -116,8 +115,6 @@ export default function ItemDetails({
         />
 
         <formComponent.Text label="Created At" value={new Date(item.created_at).toLocaleString()} />
-
-        <QRCodeStyled url={`${item.id}`} size={200} />
       </div>
 
       <div className="grid mt-6">

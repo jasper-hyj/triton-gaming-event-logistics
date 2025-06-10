@@ -6,22 +6,27 @@ import QRCodeStyling from "qr-code-styling";
 // You can import your logo/icon
 import logo from "@/img/TG Color Logo.png"; // or use public URL string
 
-type Props = {
+export type QRCode = {
   url: string;
+  bgColor: string;
   size: number;
 };
 
-const QRCodeStyled = ({ url, size }: Props) => {
+type QRcodeStyledProp = {
+  qrcode: QRCode;
+};
+
+const QRCodeStyled = ({ qrcode }: QRcodeStyledProp) => {
   const qrRef = useRef<HTMLDivElement>(null);
   const qrCodeRef = useRef<QRCodeStyling | null>(null);
 
   useEffect(() => {
     if (!qrCodeRef.current) {
       qrCodeRef.current = new QRCodeStyling({
-        width: size,
-        height: size,
+        width: qrcode.size,
+        height: qrcode.size,
         type: "canvas",
-        data: url,
+        data: qrcode.url,
         image: logo.src,
         margin: 10,
 
@@ -49,7 +54,7 @@ const QRCodeStyled = ({ url, size }: Props) => {
         },
 
         backgroundOptions: {
-          color: "#ffffff",
+          color: qrcode.bgColor,
         },
 
         cornersSquareOptions: {
@@ -64,17 +69,22 @@ const QRCodeStyled = ({ url, size }: Props) => {
       });
     }
 
-    if (qrRef.current) {
+    if (qrRef.current && qrcode) {
       qrRef.current.innerHTML = ""; // clear previous canvas
-      qrCodeRef.current?.update({ data: url });
+      qrCodeRef.current?.update({
+        data: qrcode.url,
+        width: qrcode.size,
+        height: qrcode.size,
+        backgroundOptions: { color: qrcode.bgColor },
+      });
       qrCodeRef.current?.append(qrRef.current);
     }
-  }, [url, size]);
+  }, [qrcode]);
 
   const handleDownload = async () => {
-    if (!qrCodeRef.current || !url) return;
+    if (!qrCodeRef.current) return;
     await qrCodeRef.current.download({
-      name: `${url}-qr`,
+      name: `${qrcode.url}-${qrcode.size}x${qrcode.size}`,
       extension: "png",
     });
   };
