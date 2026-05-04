@@ -19,7 +19,7 @@
     "dotenv": "^16.5.0",
     "framer-motion": "^12.16.0",
     "google-one-tap": "^1.0.6",
-    "next": "15.3.3",
+    "next": "15.3.8",
     "node-fetch": "^3.3.2",
     "pg": "^8.16.0",
     "qr-code-styling": "^1.9.2",
